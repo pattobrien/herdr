@@ -1320,8 +1320,13 @@ async fn run_client_loop(
     // Zero means the host has not reported one.
     let reported_cell_size = Arc::new(AtomicU64::new(0));
 
-    // Channel for events from the stdin, resize, and server reader threads.
+    // Channel for events from the stdin and resize threads.
     let (event_tx, mut event_rx) = tokio::sync::mpsc::channel::<ClientLoopEvent>(256);
+    // Server frames get their own small channel so a burst of large frames
+    // (kitty graphics) cannot queue ahead of user input, and so backpressure
+    // reaches the server (reader blocks -> socket fills -> server defers and
+    // later re-encodes the latest state instead of flooding stale frames).
+    let (frame_tx, mut frame_rx) = tokio::sync::mpsc::channel::<ClientLoopEvent>(2);
 
     // Spawn the stdin reader thread.
     let will_query_host_terminal_theme =
@@ -1372,7 +1377,7 @@ async fn run_client_loop(
     // Spawn the server reader thread (blocking reads from the socket).
     // Clone the stream's file descriptor so we can read from a blocking stream.
     let server_read_quit = should_quit.clone();
-    let server_read_tx = event_tx.clone();
+    let server_read_tx = frame_tx.clone();
     let read_stream = stream.try_clone().map_err(ClientError::ConnectionFailed)?;
     std::thread::spawn(move || {
         let max_frame_size = if kitty_graphics_enabled {
@@ -1403,7 +1408,9 @@ async fn run_client_loop(
     // Main event loop.
     while !should_quit.load(Ordering::Acquire) {
         let event = tokio::select! {
+            biased;
             ev = event_rx.recv() => ev.unwrap_or(ClientLoopEvent::Timer),
+            ev = frame_rx.recv() => ev.unwrap_or(ClientLoopEvent::Timer),
             _ = tokio::time::sleep(Duration::from_millis(100)) => ClientLoopEvent::Timer,
         };
 

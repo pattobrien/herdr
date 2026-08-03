@@ -729,6 +729,9 @@ fn encode_delete_placement(out: &mut Vec<u8>, host_id: u32, host_placement_id: u
     );
 }
 
+/// Raw payloads below this size are not worth a deflate round trip.
+const COMPRESS_MIN_BYTES: usize = 4096;
+
 fn encode_upload_image(
     out: &mut Vec<u8>,
     placement: &HostPlacement,
@@ -739,11 +742,30 @@ fn encode_upload_image(
         return false;
     }
 
+    let data = &placement.placement.data;
+    // PNG (f=100) is already compressed; raw RGB/RGBA pixel uploads deflate
+    // well and shrink the host-bound escape stream by an order of magnitude.
+    if format_code != 100 && data.len() >= COMPRESS_MIN_BYTES {
+        let mut encoder =
+            flate2::write::ZlibEncoder::new(Vec::new(), flate2::Compression::fast());
+        let compressed = std::io::Write::write_all(&mut encoder, data)
+            .ok()
+            .and_then(|()| encoder.finish().ok());
+        if let Some(compressed) = compressed.filter(|c| c.len() < data.len()) {
+            let control = format!(
+                "a=t,t=d,f={format_code},o=z,s={},v={},i={host_id},q=2",
+                placement.placement.image_width, placement.placement.image_height,
+            );
+            encode_kitty_data(out, &control, &compressed);
+            return true;
+        }
+    }
+
     let control = format!(
         "a=t,t=d,f={format_code},s={},v={},i={host_id},q=2",
         placement.placement.image_width, placement.placement.image_height,
     );
-    encode_kitty_data(out, &control, &placement.placement.data);
+    encode_kitty_data(out, &control, data);
     true
 }
 
