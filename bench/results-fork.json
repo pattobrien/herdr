@@ -1,0 +1,414 @@
+{
+  "mode": "herdr",
+  "rows": 50,
+  "cols": 200,
+  "pane_list_initial": "{\"id\":\"cli:pane:list\",\"result\":{\"panes\":[{\"agent_status\":\"unknown\",\"cwd\":\"/Users/patt/dev/pattobrien/dotfiles\",\"focused\":true,\"foreground_cwd\":\"/Users/patt/dev/pattobrien/dotfiles\",\"pane_id\":\"w1:p1\",\"revision\":1,\"scroll\":{\"max_offset_from_bottom\":0,\"offset_from_bottom\":0,\"viewport_rows\":49},\"tab_id\":\"w1:t1\",\"terminal_id\":\"term_6582cb24079ce1\",\"terminal_title\":\"patt@Patts-MacBook-Pro:~/dev/pattobrien/dotfiles\",\"terminal_title_stripped\":\"patt@Patts-MacBook-Pro:~/dev/pattobrien/dotfiles\",\"workspace_id\":\"w1\"}],\"type\":\"pane_list\"}}\n",
+  "idle_egress": {
+    "label": "idle",
+    "seconds": 6.0,
+    "bytes": 0,
+    "bytes_per_sec": 0
+  },
+  "typing_idle": {
+    "label": "typing_idle",
+    "sent": 40,
+    "echoed": 40,
+    "p50_ms": 4.47,
+    "p95_ms": 5.02,
+    "max_ms": 5.2,
+    "raw": [
+      5.2,
+      5.02,
+      4.93,
+      4.03,
+      4.52,
+      4.66,
+      4.96,
+      3.34,
+      2.54,
+      5.02,
+      1.29,
+      4.68,
+      4.98,
+      4.76,
+      4.99,
+      4.94,
+      4.98,
+      4.64,
+      4.43,
+      3.01,
+      4.99,
+      4.99,
+      1.29,
+      1.26,
+      1.29,
+      2.92,
+      4.63,
+      2.76,
+      4.96,
+      1.28,
+      1.33,
+      1.24,
+      1.3,
+      1.26,
+      3.5,
+      3.77,
+      1.36,
+      4.99,
+      5.07,
+      4.1
+    ]
+  },
+  "split_output": "{\"id\":\"cli:pane:split\",\"result\":{\"pane\":{\"agent_status\":\"unknown\",\"cwd\":\"/Users/patt/dev/pattobrien/dotfiles\",\"focused\":false,\"foreground_cwd\":\"/Users/patt/dev/pattobrien/dotfiles\",\"pane_id\":\"w1:p2\",\"revision\":0,\"scroll\":{\"max_offset_from_bottom\":0,\"offset_from_bottom\":0,\"viewport_rows\":49},\"tab_id\":\"w1:t1\",\"terminal_id\":\"term_6582cb38aef352\",\"workspace_id\":\"w1\"},\"type\":\"pane_info\"}}\n",
+  "churn_egress": {
+    "label": "churn_only",
+    "seconds": 6.0,
+    "bytes": 845088,
+    "bytes_per_sec": 140826
+  },
+  "typing_churn": {
+    "label": "typing_churn",
+    "sent": 40,
+    "echoed": 40,
+    "p50_ms": 10.55,
+    "p95_ms": 23.56,
+    "max_ms": 26.67,
+    "raw": [
+      10.45,
+      11.68,
+      11.56,
+      10.13,
+      6.74,
+      6.59,
+      11.08,
+      15.02,
+      7.19,
+      6.41,
+      24.07,
+      10.83,
+      6.73,
+      23.53,
+      6.84,
+      6.65,
+      14.43,
+      22.41,
+      6.82,
+      16.55,
+      16.62,
+      6.78,
+      7.63,
+      6.83,
+      10.65,
+      6.92,
+      6.88,
+      6.81,
+      11.65,
+      18.76,
+      6.96,
+      26.67,
+      6.85,
+      22.5,
+      6.7,
+      6.71,
+      12.67,
+      15.78,
+      21.86,
+      19.19
+    ]
+  },
+  "graphics_egress": {
+    "label": "graphics_only",
+    "seconds": 6.01,
+    "bytes": 8973144,
+    "bytes_per_sec": 1494271
+  },
+  "typing_graphics": {
+    "label": "typing_graphics",
+    "sent": 40,
+    "echoed": 40,
+    "p50_ms": 7.04,
+    "p95_ms": 21.54,
+    "max_ms": 24.02,
+    "raw": [
+      8.27,
+      20.07,
+      1.28,
+      17.43,
+      1.23,
+      23.77,
+      8.93,
+      14.13,
+      4.89,
+      1.29,
+      11.15,
+      3.75,
+      21.42,
+      5.08,
+      11.54,
+      20.11,
+      15.09,
+      4.88,
+      1.34,
+      21.31,
+      1.28,
+      24.02,
+      6.89,
+      13.13,
+      1.34,
+      1.31,
+      18.45,
+      1.34,
+      19.16,
+      1.27,
+      7.18,
+      17.08,
+      1.35,
+      1.34,
+      1.35,
+      1.33,
+      1.34,
+      9.04,
+      1.34,
+      15.98
+    ]
+  },
+  "render_prof": [
+    {
+      "counters": "dirty_collect.cells=16954,dirty_collect.patch=2,dirty_collect.rows=98,full_render.bytes=143288,full_render.invoke=7,full_render.sent=2,full_render.skip_identical=4,full_render_cause.generic_dirty=1,loop.tick=34,prepare_frame.semantic.changed=4,prepare_frame.semantic.skip_current=4,pty.bytes=1197,pty.request_render=9,render.attempt=9,render.attempt.pty_dirty=3,render.attempt.pty_sources=3,render.request.signal=12,retained.attempt=2,retained.pane_patch=2,retained.patch_rows=98,retained.success=2,retained_gate.needs_full_render=7,retained_send.bytes=143278,retained_send.sent=2,retained_success.sent=2",
+      "durations": "dirty_collect.total=count:2 avg_us:334 max_us:348,full_render.frame_build=count:6 avg_us:76 max_us:81,full_render.graphics_encode=count:6 avg_us:3 max_us:12,full_render.prepare_frame=count:6 avg_us:54 max_us:81,full_render.render_virtual=count:7 avg_us:552 max_us:662,full_render.serialize=count:2 avg_us:98 max_us:106,full_render.total=count:7 avg_us:741 max_us:972,full_render.try_send=count:2 avg_us:51 max_us:96,full_render.visible_hyperlinks=count:6 avg_us:24 max_us:25,pty.ghostty_write=count:9 avg_us:19 max_us:132,retained.total=count:2 avg_us:706 max_us:733,retained_send.prepare_frame=count:2 avg_us:0 max_us:1,retained_send.serialize=count:2 avg_us:85 max_us:87,retained_send.try_send=count:2 avg_us:68 max_us:69"
+    },
+    {
+      "counters": "full_render.invoke=1,full_render.skip_identical=1,loop.tick=8,prepare_frame.semantic.skip_current=1,render.attempt=1,retained_gate.needs_full_render=1",
+      "durations": "full_render.frame_build=count:1 avg_us:259 max_us:259,full_render.graphics_encode=count:1 avg_us:3 max_us:3,full_render.prepare_frame=count:1 avg_us:252 max_us:252,full_render.render_virtual=count:1 avg_us:1883 max_us:1883,full_render.total=count:1 avg_us:2502 max_us:2502,full_render.visible_hyperlinks=count:1 avg_us:81 max_us:81"
+    },
+    {
+      "counters": "loop.tick=6",
+      "durations": ""
+    },
+    {
+      "counters": "dirty_collect.cells=17127,dirty_collect.patch=4,dirty_collect.rows=99,loop.tick=15,prepare_frame.semantic.changed=3,prepare_frame.semantic.skip_current=1,pty.bytes=558,pty.request_render=17,render.attempt=4,render.attempt.pty_dirty=4,render.attempt.pty_sources=4,render.request.signal=7,retained.attempt=4,retained.pane_patch=4,retained.patch_rows=99,retained.success=4,retained_send.bytes=214923,retained_send.sent=3,retained_send.skip_identical=1,retained_success.sent=4",
+      "durations": "dirty_collect.total=count:4 avg_us:163 max_us:311,pty.ghostty_write=count:17 avg_us:2 max_us:7,retained.total=count:4 avg_us:462 max_us:690,retained_send.prepare_frame=count:4 avg_us:20 max_us:80,retained_send.serialize=count:3 avg_us:98 max_us:107,retained_send.try_send=count:3 avg_us:66 max_us:68"
+    },
+    {
+      "counters": "loop.tick=6",
+      "durations": ""
+    },
+    {
+      "counters": "loop.tick=6",
+      "durations": ""
+    },
+    {
+      "counters": "loop.tick=6",
+      "durations": ""
+    },
+    {
+      "counters": "loop.tick=6",
+      "durations": ""
+    },
+    {
+      "counters": "loop.tick=4",
+      "durations": ""
+    },
+    {
+      "counters": "loop.tick=5",
+      "durations": ""
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=33,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=4,render.attempt.pty_sources=4,render.request.signal=18,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:301 max_us:313,full_render.graphics_encode=count:8 avg_us:3 max_us:4,full_render.prepare_frame=count:8 avg_us:1 max_us:2,full_render.render_virtual=count:8 avg_us:1840 max_us:2038,full_render.serialize=count:8 avg_us:251 max_us:292,full_render.total=count:8 avg_us:2520 max_us:2738,full_render.try_send=count:8 avg_us:5 max_us:7,full_render.visible_hyperlinks=count:8 avg_us:95 max_us:100,pty.ghostty_write=count:8 avg_us:6 max_us:9"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=31,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=17,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:256 max_us:308,full_render.graphics_encode=count:8 avg_us:3 max_us:5,full_render.prepare_frame=count:8 avg_us:1 max_us:2,full_render.render_virtual=count:8 avg_us:1606 max_us:2014,full_render.serialize=count:8 avg_us:226 max_us:290,full_render.total=count:8 avg_us:2201 max_us:2732,full_render.try_send=count:8 avg_us:4 max_us:5,full_render.visible_hyperlinks=count:8 avg_us:83 max_us:97,pty.ghostty_write=count:8 avg_us:5 max_us:7"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=33,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=16,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:209 max_us:308,full_render.graphics_encode=count:8 avg_us:2 max_us:3,full_render.prepare_frame=count:8 avg_us:0 max_us:1,full_render.render_virtual=count:8 avg_us:1348 max_us:2028,full_render.serialize=count:8 avg_us:182 max_us:263,full_render.total=count:8 avg_us:1829 max_us:2714,full_render.try_send=count:8 avg_us:4 max_us:6,full_render.visible_hyperlinks=count:8 avg_us:66 max_us:102,pty.ghostty_write=count:8 avg_us:4 max_us:7"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=32,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=17,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:288 max_us:324,full_render.graphics_encode=count:8 avg_us:3 max_us:4,full_render.prepare_frame=count:8 avg_us:1 max_us:1,full_render.render_virtual=count:8 avg_us:1855 max_us:2009,full_render.serialize=count:8 avg_us:251 max_us:286,full_render.total=count:8 avg_us:2514 max_us:2724,full_render.try_send=count:8 avg_us:5 max_us:7,full_render.visible_hyperlinks=count:8 avg_us:88 max_us:102,pty.ghostty_write=count:8 avg_us:6 max_us:8"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=29,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=15,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:277 max_us:318,full_render.graphics_encode=count:8 avg_us:3 max_us:5,full_render.prepare_frame=count:8 avg_us:1 max_us:2,full_render.render_virtual=count:8 avg_us:1702 max_us:2025,full_render.serialize=count:8 avg_us:240 max_us:276,full_render.total=count:8 avg_us:2331 max_us:2724,full_render.try_send=count:8 avg_us:5 max_us:6,full_render.visible_hyperlinks=count:8 avg_us:84 max_us:104,pty.ghostty_write=count:8 avg_us:5 max_us:7"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=32,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=17,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:191 max_us:316,full_render.graphics_encode=count:8 avg_us:2 max_us:5,full_render.prepare_frame=count:8 avg_us:0 max_us:2,full_render.render_virtual=count:8 avg_us:1246 max_us:2033,full_render.serialize=count:8 avg_us:180 max_us:289,full_render.total=count:8 avg_us:1701 max_us:2746,full_render.try_send=count:8 avg_us:4 max_us:7,full_render.visible_hyperlinks=count:8 avg_us:62 max_us:107,pty.ghostty_write=count:8 avg_us:4 max_us:8"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=33,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=4,render.attempt.pty_sources=4,render.request.signal=19,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:165 max_us:256,full_render.graphics_encode=count:8 avg_us:2 max_us:4,full_render.prepare_frame=count:8 avg_us:0 max_us:2,full_render.render_virtual=count:8 avg_us:1135 max_us:1901,full_render.serialize=count:8 avg_us:147 max_us:237,full_render.total=count:8 avg_us:1523 max_us:2531,full_render.try_send=count:8 avg_us:3 max_us:6,full_render.visible_hyperlinks=count:8 avg_us:56 max_us:104,pty.ghostty_write=count:8 avg_us:3 max_us:8"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=34,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=5,render.attempt.pty_sources=5,render.request.signal=17,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:129 max_us:307,full_render.graphics_encode=count:8 avg_us:2 max_us:4,full_render.prepare_frame=count:8 avg_us:0 max_us:1,full_render.render_virtual=count:8 avg_us:876 max_us:1993,full_render.serialize=count:8 avg_us:132 max_us:260,full_render.total=count:8 avg_us:1197 max_us:2683,full_render.try_send=count:8 avg_us:3 max_us:5,full_render.visible_hyperlinks=count:8 avg_us:42 max_us:99,pty.ghostty_write=count:8 avg_us:2 max_us:6"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=28,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=4,render.attempt.pty_sources=4,render.request.signal=16,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:153 max_us:246,full_render.graphics_encode=count:8 avg_us:1 max_us:2,full_render.prepare_frame=count:8 avg_us:0 max_us:1,full_render.render_virtual=count:8 avg_us:1040 max_us:1646,full_render.serialize=count:8 avg_us:146 max_us:223,full_render.total=count:8 avg_us:1406 max_us:2197,full_render.try_send=count:8 avg_us:4 max_us:7,full_render.visible_hyperlinks=count:8 avg_us:49 max_us:80,pty.ghostty_write=count:8 avg_us:2 max_us:3"
+    },
+    {
+      "counters": "full_render.bytes=573016,full_render.invoke=8,full_render.sent=8,loop.tick=31,prepare_frame.semantic.changed=8,pty.bytes=16,pty.request_render=8,render.attempt=8,render.attempt.pty_dirty=4,render.attempt.pty_sources=4,render.request.signal=18,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:8 avg_us:234 max_us:306,full_render.graphics_encode=count:8 avg_us:3 max_us:4,full_render.prepare_frame=count:8 avg_us:1 max_us:1,full_render.render_virtual=count:8 avg_us:1619 max_us:2056,full_render.serialize=count:8 avg_us:213 max_us:288,full_render.total=count:8 avg_us:2172 max_us:2756,full_render.try_send=count:8 avg_us:4 max_us:5,full_render.visible_hyperlinks=count:8 avg_us:78 max_us:107,pty.ghostty_write=count:8 avg_us:6 max_us:18"
+    },
+    {
+      "counters": "dirty_collect.cells=8064,dirty_collect.clean=3,dirty_collect.patch=3,dirty_collect.rows=96,full_render.bytes=74843,full_render.invoke=2,full_render.sent=1,full_render.skip_identical=1,loop.tick=16,prepare_frame.semantic.changed=4,prepare_frame.semantic.skip_current=1,pty.bytes=1144,pty.request_render=10,render.attempt=5,render.attempt.pty_dirty=3,render.attempt.pty_sources=4,render.request.signal=7,retained.attempt=3,retained.pane_clean=3,retained.pane_patch=3,retained.patch_rows=96,retained.success=3,retained_gate.needs_full_render=2,retained_send.bytes=224631,retained_send.sent=3,retained_success.sent=3",
+      "durations": "dirty_collect.total=count:6 avg_us:58 max_us:174,full_render.frame_build=count:2 avg_us:245 max_us:322,full_render.graphics_encode=count:2 avg_us:3 max_us:4,full_render.prepare_frame=count:2 avg_us:167 max_us:332,full_render.render_virtual=count:2 avg_us:2242 max_us:2304,full_render.serialize=count:1 avg_us:149 max_us:149,full_render.total=count:2 avg_us:2904 max_us:2958,full_render.try_send=count:1 avg_us:156 max_us:156,full_render.visible_hyperlinks=count:2 avg_us:74 max_us:94,pty.ghostty_write=count:10 avg_us:6 max_us:19,retained.total=count:3 avg_us:416 max_us:510,retained_send.prepare_frame=count:3 avg_us:1 max_us:1,retained_send.serialize=count:3 avg_us:95 max_us:103,retained_send.try_send=count:3 avg_us:66 max_us:70"
+    },
+    {
+      "counters": "dirty_collect.cells=5460,dirty_collect.clean=8,dirty_collect.patch=8,dirty_collect.rows=65,loop.tick=24,prepare_frame.semantic.changed=8,pty.bytes=3494,pty.request_render=146,render.attempt=8,render.attempt.pty_dirty=8,render.attempt.pty_sources=8,render.request.signal=12,retained.attempt=8,retained.pane_clean=8,retained.pane_patch=8,retained.patch_rows=65,retained.success=8,retained_send.bytes=600804,retained_send.sent=8,retained_success.sent=8",
+      "durations": "dirty_collect.total=count:16 avg_us:19 max_us:153,pty.ghostty_write=count:146 avg_us:0 max_us:5,retained.total=count:8 avg_us:351 max_us:584,retained_send.prepare_frame=count:8 avg_us:5 max_us:17,retained_send.serialize=count:8 avg_us:108 max_us:169,retained_send.try_send=count:8 avg_us:87 max_us:158"
+    },
+    {
+      "counters": "dirty_collect.cells=4032,dirty_collect.clean=42,dirty_collect.fallback=26,dirty_collect.patch=16,dirty_collect.rows=48,dirty_fallback.dirty_full=26,full_render.bytes=1953250,full_render.invoke=26,full_render.sent=26,loop.tick=86,prepare_frame.semantic.changed=42,pty.bytes=5376,pty.request_render=42,render.attempt=42,render.attempt.pty_dirty=42,render.attempt.pty_sources=42,render.request.signal=42,retained.attempt=42,retained.pane_clean=42,retained.pane_patch=16,retained.patch_rows=48,retained.success=16,retained_fallback.dirty_patch_fallback=26,retained_send.bytes=1201936,retained_send.sent=16,retained_success.sent=16",
+      "durations": "dirty_collect.total=count:84 avg_us:14 max_us:61,full_render.frame_build=count:26 avg_us:182 max_us:353,full_render.graphics_encode=count:26 avg_us:2 max_us:5,full_render.prepare_frame=count:26 avg_us:4 max_us:9,full_render.render_virtual=count:26 avg_us:1210 max_us:2318,full_render.serialize=count:26 avg_us:164 max_us:287,full_render.total=count:26 avg_us:1774 max_us:3360,full_render.try_send=count:26 avg_us:141 max_us:267,full_render.visible_hyperlinks=count:26 avg_us:55 max_us:116,pty.ghostty_write=count:42 avg_us:6 max_us:12,retained.total=count:42 avg_us:446 max_us:1023,retained_send.prepare_frame=count:16 avg_us:51 max_us:80,retained_send.serialize=count:16 avg_us:245 max_us:344,retained_send.try_send=count:16 avg_us:224 max_us:256"
+    },
+    {
+      "counters": "dirty_collect.clean=43,dirty_collect.fallback=43,dirty_fallback.dirty_full=43,full_render.bytes=3230375,full_render.invoke=43,full_render.sent=43,loop.tick=87,prepare_frame.semantic.changed=43,pty.bytes=5504,pty.request_render=43,render.attempt=43,render.attempt.pty_dirty=43,render.attempt.pty_sources=43,render.request.signal=43,retained.attempt=43,retained.pane_clean=43,retained_fallback.dirty_patch_fallback=43",
+      "durations": "dirty_collect.total=count:86 avg_us:7 max_us:24,full_render.frame_build=count:43 avg_us:271 max_us:354,full_render.graphics_encode=count:43 avg_us:2 max_us:5,full_render.prepare_frame=count:43 avg_us:6 max_us:12,full_render.render_virtual=count:43 avg_us:1808 max_us:2513,full_render.serialize=count:43 avg_us:221 max_us:289,full_render.total=count:43 avg_us:2610 max_us:3609,full_render.try_send=count:43 avg_us:204 max_us:292,full_render.visible_hyperlinks=count:43 avg_us:79 max_us:121,pty.ghostty_write=count:43 avg_us:8 max_us:20,retained.total=count:43 avg_us:259 max_us:366"
+    },
+    {
+      "counters": "dirty_collect.clean=44,dirty_collect.fallback=44,dirty_fallback.dirty_full=44,full_render.bytes=3305500,full_render.invoke=44,full_render.sent=44,loop.tick=89,prepare_frame.semantic.changed=44,pty.bytes=5632,pty.request_render=44,render.attempt=44,render.attempt.pty_dirty=44,render.attempt.pty_sources=44,render.request.signal=44,retained.attempt=44,retained.pane_clean=44,retained_fallback.dirty_patch_fallback=44",
+      "durations": "dirty_collect.total=count:88 avg_us:7 max_us:32,full_render.frame_build=count:44 avg_us:246 max_us:377,full_render.graphics_encode=count:44 avg_us:3 max_us:13,full_render.prepare_frame=count:44 avg_us:5 max_us:10,full_render.render_virtual=count:44 avg_us:1603 max_us:2338,full_render.serialize=count:44 avg_us:205 max_us:310,full_render.total=count:44 avg_us:2347 max_us:3405,full_render.try_send=count:44 avg_us:193 max_us:349,full_render.visible_hyperlinks=count:44 avg_us:75 max_us:118,pty.ghostty_write=count:44 avg_us:8 max_us:26,retained.total=count:44 avg_us:239 max_us:348"
+    },
+    {
+      "counters": "dirty_collect.clean=43,dirty_collect.fallback=43,dirty_fallback.dirty_full=43,full_render.bytes=3230375,full_render.invoke=43,full_render.sent=43,loop.tick=88,prepare_frame.semantic.changed=43,pty.bytes=5504,pty.request_render=43,render.attempt=43,render.attempt.pty_dirty=43,render.attempt.pty_sources=43,render.request.signal=43,retained.attempt=43,retained.pane_clean=43,retained_fallback.dirty_patch_fallback=43",
+      "durations": "dirty_collect.total=count:86 avg_us:5 max_us:25,full_render.frame_build=count:43 avg_us:227 max_us:347,full_render.graphics_encode=count:43 avg_us:2 max_us:4,full_render.prepare_frame=count:43 avg_us:4 max_us:8,full_render.render_virtual=count:43 avg_us:1490 max_us:2587,full_render.serialize=count:43 avg_us:199 max_us:345,full_render.total=count:43 avg_us:2179 max_us:3624,full_render.try_send=count:43 avg_us:173 max_us:258,full_render.visible_hyperlinks=count:43 avg_us:67 max_us:115,pty.ghostty_write=count:43 avg_us:6 max_us:18,retained.total=count:43 avg_us:211 max_us:315"
+    },
+    {
+      "counters": "dirty_collect.clean=43,dirty_collect.fallback=43,dirty_fallback.dirty_full=43,full_render.bytes=3230375,full_render.invoke=43,full_render.sent=43,loop.tick=88,prepare_frame.semantic.changed=43,pty.bytes=5504,pty.request_render=43,render.attempt=43,render.attempt.pty_dirty=43,render.attempt.pty_sources=43,render.request.signal=43,retained.attempt=43,retained.pane_clean=43,retained_fallback.dirty_patch_fallback=43",
+      "durations": "dirty_collect.total=count:86 avg_us:4 max_us:26,full_render.frame_build=count:43 avg_us:153 max_us:352,full_render.graphics_encode=count:43 avg_us:1 max_us:5,full_render.prepare_frame=count:43 avg_us:3 max_us:8,full_render.render_virtual=count:43 avg_us:1016 max_us:2212,full_render.serialize=count:43 avg_us:137 max_us:283,full_render.total=count:43 avg_us:1485 max_us:3237,full_render.try_send=count:43 avg_us:119 max_us:260,full_render.visible_hyperlinks=count:43 avg_us:45 max_us:151,pty.ghostty_write=count:43 avg_us:4 max_us:13,retained.total=count:43 avg_us:144 max_us:342"
+    },
+    {
+      "counters": "dirty_collect.clean=44,dirty_collect.fallback=44,dirty_fallback.dirty_full=44,full_render.bytes=3305500,full_render.invoke=44,full_render.sent=44,loop.tick=88,prepare_frame.semantic.changed=44,pty.bytes=5632,pty.request_render=44,render.attempt=44,render.attempt.pty_dirty=44,render.attempt.pty_sources=44,render.request.signal=44,retained.attempt=44,retained.pane_clean=44,retained_fallback.dirty_patch_fallback=44",
+      "durations": "dirty_collect.total=count:88 avg_us:4 max_us:19,full_render.frame_build=count:44 avg_us:177 max_us:271,full_render.graphics_encode=count:44 avg_us:1 max_us:3,full_render.prepare_frame=count:44 avg_us:4 max_us:15,full_render.render_virtual=count:44 avg_us:1178 max_us:1859,full_render.serialize=count:44 avg_us:149 max_us:224,full_render.total=count:44 avg_us:1709 max_us:2651,full_render.try_send=count:44 avg_us:136 max_us:195,full_render.visible_hyperlinks=count:44 avg_us:51 max_us:84,pty.ghostty_write=count:44 avg_us:4 max_us:8,retained.total=count:44 avg_us:170 max_us:337"
+    },
+    {
+      "counters": "dirty_collect.clean=44,dirty_collect.fallback=44,dirty_fallback.dirty_full=44,full_render.bytes=3305500,full_render.invoke=44,full_render.sent=44,loop.tick=90,prepare_frame.semantic.changed=44,pty.bytes=5632,pty.request_render=44,render.attempt=44,render.attempt.pty_dirty=44,render.attempt.pty_sources=44,render.request.signal=44,retained.attempt=44,retained.pane_clean=44,retained_fallback.dirty_patch_fallback=44",
+      "durations": "dirty_collect.total=count:88 avg_us:6 max_us:15,full_render.frame_build=count:44 avg_us:263 max_us:347,full_render.graphics_encode=count:44 avg_us:2 max_us:4,full_render.prepare_frame=count:44 avg_us:5 max_us:9,full_render.render_virtual=count:44 avg_us:1699 max_us:2181,full_render.serialize=count:44 avg_us:218 max_us:297,full_render.total=count:44 avg_us:2479 max_us:3186,full_render.try_send=count:44 avg_us:198 max_us:273,full_render.visible_hyperlinks=count:44 avg_us:76 max_us:106,pty.ghostty_write=count:44 avg_us:9 max_us:77,retained.total=count:44 avg_us:239 max_us:315"
+    },
+    {
+      "counters": "dirty_collect.clean=42,dirty_collect.fallback=42,dirty_fallback.dirty_full=42,full_render.bytes=3305500,full_render.invoke=44,full_render.sent=44,loop.tick=95,prepare_frame.semantic.changed=44,pty.bytes=5380,pty.request_render=44,render.attempt=44,render.attempt.pty_dirty=44,render.attempt.pty_sources=45,render.request.signal=48,retained.attempt=42,retained.pane_clean=42,retained_fallback.dirty_patch_fallback=42,retained_gate.needs_full_render=2",
+      "durations": "dirty_collect.total=count:84 avg_us:4 max_us:17,full_render.frame_build=count:44 avg_us:202 max_us:410,full_render.graphics_encode=count:44 avg_us:2 max_us:5,full_render.prepare_frame=count:44 avg_us:3 max_us:10,full_render.render_virtual=count:44 avg_us:1333 max_us:2413,full_render.serialize=count:44 avg_us:177 max_us:289,full_render.total=count:44 avg_us:1937 max_us:3206,full_render.try_send=count:44 avg_us:147 max_us:264,full_render.visible_hyperlinks=count:44 avg_us:58 max_us:110,pty.ghostty_write=count:44 avg_us:5 max_us:11,retained.total=count:42 avg_us:182 max_us:383"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,loop.tick=122,prepare_frame.semantic.changed=47,pty.bytes=5648,pty.request_render=52,render.attempt=47,render.attempt.pty_dirty=47,render.attempt.pty_sources=51,render.request.signal=65,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:7 max_us:16,full_render.frame_build=count:47 avg_us:283 max_us:344,full_render.graphics_encode=count:47 avg_us:2 max_us:5,full_render.prepare_frame=count:47 avg_us:4 max_us:8,full_render.render_virtual=count:47 avg_us:1885 max_us:2286,full_render.serialize=count:47 avg_us:239 max_us:294,full_render.total=count:47 avg_us:2695 max_us:3238,full_render.try_send=count:47 avg_us:179 max_us:262,full_render.visible_hyperlinks=count:47 avg_us:83 max_us:108,pty.ghostty_write=count:52 avg_us:6 max_us:12,retained.total=count:39 avg_us:268 max_us:550"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,loop.tick=127,prepare_frame.semantic.changed=47,pty.bytes=5520,pty.request_render=51,render.attempt=47,render.attempt.pty_dirty=47,render.attempt.pty_sources=51,render.request.signal=66,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:4 max_us:16,full_render.frame_build=count:47 avg_us:211 max_us:340,full_render.graphics_encode=count:47 avg_us:2 max_us:5,full_render.prepare_frame=count:47 avg_us:3 max_us:7,full_render.render_virtual=count:47 avg_us:1384 max_us:2291,full_render.serialize=count:47 avg_us:187 max_us:312,full_render.total=count:47 avg_us:1995 max_us:3176,full_render.try_send=count:47 avg_us:132 max_us:263,full_render.visible_hyperlinks=count:47 avg_us:62 max_us:100,pty.ghostty_write=count:51 avg_us:4 max_us:14,retained.total=count:39 avg_us:192 max_us:660"
+    },
+    {
+      "counters": "dirty_collect.clean=38,dirty_collect.fallback=38,dirty_fallback.dirty_full=38,full_render.bytes=3455750,full_render.invoke=46,full_render.sent=46,full_render_cause.server_events=1,loop.tick=117,prepare_frame.semantic.changed=46,pty.bytes=5392,pty.request_render=50,render.attempt=46,render.attempt.pty_dirty=44,render.attempt.pty_sources=48,render.request.signal=66,retained.attempt=38,retained.pane_clean=38,retained_fallback.dirty_patch_fallback=38,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:76 avg_us:6 max_us:17,full_render.frame_build=count:46 avg_us:290 max_us:344,full_render.graphics_encode=count:46 avg_us:2 max_us:5,full_render.prepare_frame=count:46 avg_us:4 max_us:10,full_render.render_virtual=count:46 avg_us:1970 max_us:2218,full_render.serialize=count:46 avg_us:237 max_us:306,full_render.total=count:46 avg_us:2791 max_us:3228,full_render.try_send=count:46 avg_us:180 max_us:308,full_render.visible_hyperlinks=count:46 avg_us:89 max_us:115,pty.ghostty_write=count:50 avg_us:5 max_us:9,retained.total=count:38 avg_us:389 max_us:4943"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,full_render_cause.server_events=1,loop.tick=120,prepare_frame.semantic.changed=47,pty.bytes=5520,pty.request_render=51,render.attempt=47,render.attempt.pty_dirty=46,render.attempt.pty_sources=50,render.request.signal=64,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:7 max_us:30,full_render.frame_build=count:47 avg_us:313 max_us:342,full_render.graphics_encode=count:47 avg_us:2 max_us:5,full_render.prepare_frame=count:47 avg_us:5 max_us:8,full_render.render_virtual=count:47 avg_us:2065 max_us:2310,full_render.serialize=count:47 avg_us:260 max_us:332,full_render.total=count:47 avg_us:2957 max_us:3310,full_render.try_send=count:47 avg_us:200 max_us:279,full_render.visible_hyperlinks=count:47 avg_us:92 max_us:117,pty.ghostty_write=count:51 avg_us:6 max_us:28,retained.total=count:39 avg_us:275 max_us:439"
+    },
+    {
+      "counters": "dirty_collect.clean=41,dirty_collect.fallback=41,dirty_fallback.dirty_full=41,full_render.bytes=3681125,full_render.invoke=49,full_render.sent=49,full_render_cause.server_events=1,loop.tick=131,prepare_frame.semantic.changed=49,pty.bytes=5648,pty.request_render=52,render.attempt=49,render.attempt.pty_dirty=48,render.attempt.pty_sources=52,render.request.signal=74,retained.attempt=41,retained.pane_clean=41,retained_fallback.dirty_patch_fallback=41,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:82 avg_us:7 max_us:17,full_render.frame_build=count:49 avg_us:303 max_us:352,full_render.graphics_encode=count:49 avg_us:2 max_us:4,full_render.prepare_frame=count:49 avg_us:5 max_us:8,full_render.render_virtual=count:49 avg_us:1995 max_us:2178,full_render.serialize=count:49 avg_us:258 max_us:292,full_render.total=count:49 avg_us:2867 max_us:3161,full_render.try_send=count:49 avg_us:197 max_us:257,full_render.visible_hyperlinks=count:49 avg_us:88 max_us:125,pty.ghostty_write=count:52 avg_us:6 max_us:34,retained.total=count:41 avg_us:280 max_us:834"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,loop.tick=119,prepare_frame.semantic.changed=47,pty.bytes=5648,pty.request_render=52,render.attempt=47,render.attempt.pty_dirty=45,render.attempt.pty_sources=49,render.request.signal=62,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:7 max_us:29,full_render.frame_build=count:47 avg_us:304 max_us:426,full_render.graphics_encode=count:47 avg_us:2 max_us:11,full_render.prepare_frame=count:47 avg_us:4 max_us:7,full_render.render_virtual=count:47 avg_us:1982 max_us:2259,full_render.serialize=count:47 avg_us:253 max_us:355,full_render.total=count:47 avg_us:2846 max_us:3211,full_render.try_send=count:47 avg_us:195 max_us:268,full_render.visible_hyperlinks=count:47 avg_us:87 max_us:120,pty.ghostty_write=count:52 avg_us:5 max_us:18,retained.total=count:39 avg_us:262 max_us:339"
+    },
+    {
+      "counters": "dirty_collect.clean=40,dirty_collect.fallback=40,dirty_fallback.dirty_full=40,full_render.bytes=3606000,full_render.invoke=48,full_render.sent=48,loop.tick=122,prepare_frame.semantic.changed=48,pty.bytes=5648,pty.request_render=52,render.attempt=48,render.attempt.pty_dirty=45,render.attempt.pty_sources=49,render.request.signal=68,retained.attempt=40,retained.pane_clean=40,retained_fallback.dirty_patch_fallback=40,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:80 avg_us:7 max_us:33,full_render.frame_build=count:48 avg_us:317 max_us:360,full_render.graphics_encode=count:48 avg_us:2 max_us:4,full_render.prepare_frame=count:48 avg_us:5 max_us:8,full_render.render_virtual=count:48 avg_us:2090 max_us:2237,full_render.serialize=count:48 avg_us:266 max_us:320,full_render.total=count:48 avg_us:2995 max_us:3230,full_render.try_send=count:48 avg_us:202 max_us:290,full_render.visible_hyperlinks=count:48 avg_us:93 max_us:129,pty.ghostty_write=count:52 avg_us:4 max_us:24,retained.total=count:40 avg_us:279 max_us:338"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,full_render_cause.server_events=1,loop.tick=122,prepare_frame.semantic.changed=47,pty.bytes=5520,pty.request_render=51,render.attempt=47,render.attempt.pty_dirty=46,render.attempt.pty_sources=49,render.request.signal=67,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:7 max_us:33,full_render.frame_build=count:47 avg_us:316 max_us:353,full_render.graphics_encode=count:47 avg_us:2 max_us:3,full_render.prepare_frame=count:47 avg_us:4 max_us:7,full_render.render_virtual=count:47 avg_us:2070 max_us:2180,full_render.serialize=count:47 avg_us:266 max_us:336,full_render.total=count:47 avg_us:2967 max_us:3155,full_render.try_send=count:47 avg_us:200 max_us:259,full_render.visible_hyperlinks=count:47 avg_us:91 max_us:113,pty.ghostty_write=count:51 avg_us:5 max_us:21,retained.total=count:39 avg_us:272 max_us:316"
+    },
+    {
+      "counters": "dirty_collect.clean=39,dirty_collect.fallback=39,dirty_fallback.dirty_full=39,full_render.bytes=3530875,full_render.invoke=47,full_render.sent=47,full_render_cause.server_events=1,loop.tick=124,prepare_frame.semantic.changed=47,pty.bytes=5520,pty.request_render=51,render.attempt=47,render.attempt.pty_dirty=46,render.attempt.pty_sources=50,render.request.signal=66,retained.attempt=39,retained.pane_clean=39,retained_fallback.dirty_patch_fallback=39,retained_gate.needs_full_render=8",
+      "durations": "dirty_collect.total=count:78 avg_us:7 max_us:30,full_render.frame_build=count:47 avg_us:296 max_us:359,full_render.graphics_encode=count:47 avg_us:2 max_us:3,full_render.prepare_frame=count:47 avg_us:4 max_us:7,full_render.render_virtual=count:47 avg_us:1945 max_us:2279,full_render.serialize=count:47 avg_us:246 max_us:289,full_render.total=count:47 avg_us:2783 max_us:3290,full_render.try_send=count:47 avg_us:187 max_us:280,full_render.visible_hyperlinks=count:47 avg_us:85 max_us:110,pty.ghostty_write=count:51 avg_us:5 max_us:19,retained.total=count:39 avg_us:267 max_us:655"
+    },
+    {
+      "counters": "dirty_collect.cells=168,dirty_collect.clean=36,dirty_collect.fallback=34,dirty_collect.patch=2,dirty_collect.rows=2,dirty_fallback.dirty_full=34,full_render.bytes=3005732,full_render.invoke=40,full_render.sent=40,full_render_cause.server_events=1,loop.tick=109,prepare_frame.semantic.changed=42,pty.bytes=5711,pty.request_render=51,render.attempt=42,render.attempt.pty_dirty=42,render.attempt.pty_sources=45,render.request.signal=59,retained.attempt=36,retained.pane_clean=36,retained.pane_patch=2,retained.patch_rows=2,retained.success=2,retained_fallback.dirty_patch_fallback=34,retained_gate.needs_full_render=6,retained_send.bytes=151080,retained_send.sent=2,retained_success.sent=2",
+      "durations": "dirty_collect.total=count:72 avg_us:7 max_us:29,full_render.frame_build=count:40 avg_us:301 max_us:357,full_render.graphics_encode=count:40 avg_us:2 max_us:3,full_render.prepare_frame=count:40 avg_us:5 max_us:13,full_render.render_virtual=count:40 avg_us:1946 max_us:2362,full_render.serialize=count:40 avg_us:250 max_us:313,full_render.total=count:40 avg_us:2813 max_us:3296,full_render.try_send=count:40 avg_us:205 max_us:324,full_render.visible_hyperlinks=count:40 avg_us:86 max_us:103,pty.ghostty_write=count:51 avg_us:6 max_us:18,retained.total=count:36 avg_us:273 max_us:531,retained_send.prepare_frame=count:2 avg_us:32 max_us:48,retained_send.serialize=count:2 avg_us:122 max_us:148,retained_send.try_send=count:2 avg_us:105 max_us:145"
+    },
+    {
+      "counters": "dirty_collect.cells=84,dirty_collect.clean=3,dirty_collect.fallback=2,dirty_collect.patch=1,dirty_collect.rows=1,dirty_fallback.dirty_full=2,full_render.bytes=989028,full_render.invoke=12,full_render.sent=7,full_render.skip_identical=5,loop.tick=41,prepare_frame.semantic.changed=8,prepare_frame.semantic.skip_current=5,pty.bytes=7707144,pty.request_render=7771,pty.request_render_delayed=1875,render.attempt=13,render.attempt.pty_dirty=13,render.attempt.pty_sources=13,render.request.signal=32,retained.attempt=13,retained.pane_clean=3,retained.pane_patch=1,retained.patch_rows=1,retained.success=1,retained_fallback.dirty_patch_fallback=2,retained_fallback.graphics_cache_active=9,retained_fallback.visible_kitty_graphics=1,retained_send.bytes=75955,retained_send.sent=1,retained_success.sent=1",
+      "durations": "dirty_collect.total=count:6 avg_us:7 max_us:25,full_render.frame_build=count:12 avg_us:77 max_us:103,full_render.graphics_encode=count:12 avg_us:208 max_us:1001,full_render.prepare_frame=count:12 avg_us:43 max_us:87,full_render.render_virtual=count:12 avg_us:555 max_us:618,full_render.serialize=count:7 avg_us:126 max_us:171,full_render.total=count:12 avg_us:1034 max_us:1934,full_render.try_send=count:7 avg_us:68 max_us:72,full_render.visible_hyperlinks=count:12 avg_us:30 max_us:65,pty.ghostty_write=count:7771 avg_us:0 max_us:148,retained.total=count:13 avg_us:87 max_us:617,retained_send.prepare_frame=count:1 avg_us:53 max_us:53,retained_send.serialize=count:1 avg_us:172 max_us:172,retained_send.try_send=count:1 avg_us:161 max_us:161"
+    },
+    {
+      "counters": "full_render.bytes=2824239,full_render.invoke=37,full_render.sent=19,full_render.skip_identical=18,loop.tick=104,prepare_frame.semantic.changed=19,prepare_frame.semantic.skip_current=18,pty.bytes=23114437,pty.request_render=22879,pty.request_render_delayed=5626,render.attempt=37,render.attempt.pty_dirty=37,render.attempt.pty_sources=37,render.request.signal=94,retained.attempt=37,retained_fallback.graphics_cache_active=37",
+      "durations": "full_render.frame_build=count:37 avg_us:98 max_us:219,full_render.graphics_encode=count:37 avg_us:314 max_us:1301,full_render.prepare_frame=count:37 avg_us:71 max_us:216,full_render.render_virtual=count:37 avg_us:692 max_us:1537,full_render.serialize=count:19 avg_us:131 max_us:179,full_render.total=count:37 avg_us:1328 max_us:2366,full_render.try_send=count:19 avg_us:69 max_us:74,full_render.visible_hyperlinks=count:37 avg_us:41 max_us:153,pty.ghostty_write=count:22879 avg_us:0 max_us:35,retained.total=count:37 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3062596,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=112,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25420,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=100,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:100 max_us:208,full_render.graphics_encode=count:40 avg_us:419 max_us:1766,full_render.prepare_frame=count:40 avg_us:72 max_us:219,full_render.render_virtual=count:40 avg_us:720 max_us:1550,full_render.serialize=count:20 avg_us:135 max_us:181,full_render.total=count:40 avg_us:1491 max_us:2654,full_render.try_send=count:20 avg_us:69 max_us:80,full_render.visible_hyperlinks=count:40 avg_us:69 max_us:839,pty.ghostty_write=count:25420 avg_us:0 max_us:96,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3064974,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=110,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25419,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=100,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:99 max_us:201,full_render.graphics_encode=count:40 avg_us:493 max_us:1963,full_render.prepare_frame=count:40 avg_us:72 max_us:204,full_render.render_virtual=count:40 avg_us:699 max_us:1370,full_render.serialize=count:20 avg_us:136 max_us:188,full_render.total=count:40 avg_us:1523 max_us:2857,full_render.try_send=count:20 avg_us:72 max_us:83,full_render.visible_hyperlinks=count:40 avg_us:47 max_us:514,pty.ghostty_write=count:25419 avg_us:0 max_us:55,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3073495,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=112,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25420,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=100,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:86 max_us:197,full_render.graphics_encode=count:40 avg_us:585 max_us:2384,full_render.prepare_frame=count:40 avg_us:62 max_us:191,full_render.render_virtual=count:40 avg_us:634 max_us:1759,full_render.serialize=count:20 avg_us:133 max_us:180,full_render.total=count:40 avg_us:1522 max_us:3281,full_render.try_send=count:20 avg_us:72 max_us:83,full_render.visible_hyperlinks=count:40 avg_us:44 max_us:510,pty.ghostty_write=count:25420 avg_us:0 max_us:46,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3078675,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=111,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25682594,pty.request_render=25419,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=101,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:89 max_us:177,full_render.graphics_encode=count:40 avg_us:670 max_us:2679,full_render.prepare_frame=count:40 avg_us:64 max_us:177,full_render.render_virtual=count:40 avg_us:636 max_us:1302,full_render.serialize=count:20 avg_us:137 max_us:181,full_render.total=count:40 avg_us:1609 max_us:3578,full_render.try_send=count:20 avg_us:71 max_us:82,full_render.visible_hyperlinks=count:40 avg_us:36 max_us:359,pty.ghostty_write=count:25419 avg_us:0 max_us:55,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3089808,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=110,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25418,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=99,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:79 max_us:185,full_render.graphics_encode=count:40 avg_us:737 max_us:3213,full_render.prepare_frame=count:40 avg_us:54 max_us:170,full_render.render_virtual=count:40 avg_us:572 max_us:1477,full_render.serialize=count:20 avg_us:134 max_us:182,full_render.total=count:40 avg_us:1581 max_us:4072,full_render.try_send=count:20 avg_us:68 max_us:78,full_render.visible_hyperlinks=count:40 avg_us:29 max_us:128,pty.ghostty_write=count:25418 avg_us:0 max_us:83,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3095111,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=112,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25420,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=100,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:77 max_us:89,full_render.graphics_encode=count:40 avg_us:805 max_us:3225,full_render.prepare_frame=count:40 avg_us:52 max_us:91,full_render.render_virtual=count:40 avg_us:554 max_us:654,full_render.serialize=count:20 avg_us:132 max_us:179,full_render.total=count:40 avg_us:1627 max_us:4125,full_render.try_send=count:20 avg_us:67 max_us:79,full_render.visible_hyperlinks=count:40 avg_us:31 max_us:139,pty.ghostty_write=count:25420 avg_us:0 max_us:35,retained.total=count:40 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3098492,full_render.invoke=40,full_render.sent=20,full_render.skip_identical=20,loop.tick=112,prepare_frame.semantic.changed=20,prepare_frame.semantic.skip_current=20,pty.bytes=25681570,pty.request_render=25420,pty.request_render_delayed=6250,render.attempt=40,render.attempt.pty_dirty=40,render.attempt.pty_sources=40,render.request.signal=101,retained.attempt=40,retained_fallback.graphics_cache_active=40",
+      "durations": "full_render.frame_build=count:40 avg_us:81 max_us:199,full_render.graphics_encode=count:40 avg_us:869 max_us:3619,full_render.prepare_frame=count:40 avg_us:57 max_us:193,full_render.render_virtual=count:40 avg_us:580 max_us:1520,full_render.serialize=count:20 avg_us:135 max_us:181,full_render.total=count:40 avg_us:1733 max_us:4534,full_render.try_send=count:20 avg_us:71 max_us:83,full_render.visible_hyperlinks=count:40 avg_us:34 max_us:113,pty.ghostty_write=count:25420 avg_us:0 max_us:33,retained.total=count:40 avg_us:0 max_us:3"
+    },
+    {
+      "counters": "full_render.bytes=3487903,full_render.invoke=41,full_render.sent=25,full_render.skip_identical=16,loop.tick=123,prepare_frame.semantic.changed=25,prepare_frame.semantic.skip_current=16,pty.bytes=25681582,pty.request_render=25425,pty.request_render_delayed=6250,render.attempt=41,render.attempt.pty_dirty=40,render.attempt.pty_sources=43,render.request.signal=106,retained.attempt=35,retained_fallback.graphics_cache_active=35,retained_gate.needs_full_render=6",
+      "durations": "full_render.frame_build=count:41 avg_us:75 max_us:87,full_render.graphics_encode=count:41 avg_us:942 max_us:3927,full_render.prepare_frame=count:41 avg_us:42 max_us:91,full_render.render_virtual=count:41 avg_us:553 max_us:1151,full_render.serialize=count:25 avg_us:127 max_us:187,full_render.total=count:41 avg_us:1760 max_us:4815,full_render.try_send=count:25 avg_us:53 max_us:76,full_render.visible_hyperlinks=count:41 avg_us:30 max_us:85,pty.ghostty_write=count:25425 avg_us:0 max_us:42,retained.total=count:35 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3496954,full_render.invoke=43,full_render.sent=25,full_render.skip_identical=18,full_render_cause.server_events=2,loop.tick=132,prepare_frame.semantic.changed=25,prepare_frame.semantic.skip_current=18,pty.bytes=25681586,pty.request_render=25426,pty.request_render_delayed=6250,render.attempt=43,render.attempt.pty_dirty=42,render.attempt.pty_sources=45,render.request.signal=109,retained.attempt=35,retained_fallback.graphics_cache_active=35,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:43 avg_us:79 max_us:174,full_render.graphics_encode=count:43 avg_us:986 max_us:4206,full_render.prepare_frame=count:43 avg_us:46 max_us:172,full_render.render_virtual=count:43 avg_us:581 max_us:1200,full_render.serialize=count:25 avg_us:130 max_us:185,full_render.total=count:43 avg_us:1832 max_us:5025,full_render.try_send=count:25 avg_us:48 max_us:75,full_render.visible_hyperlinks=count:43 avg_us:27 max_us:60,pty.ghostty_write=count:25426 avg_us:0 max_us:88,retained.total=count:35 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3428633,full_render.invoke=42,full_render.sent=24,full_render.skip_identical=18,loop.tick=129,prepare_frame.semantic.changed=24,prepare_frame.semantic.skip_current=18,pty.bytes=25681586,pty.request_render=25426,pty.request_render_delayed=6250,render.attempt=42,render.attempt.pty_dirty=41,render.attempt.pty_sources=47,render.request.signal=113,retained.attempt=34,retained_fallback.graphics_cache_active=34,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:42 avg_us:78 max_us:177,full_render.graphics_encode=count:42 avg_us:1065 max_us:4531,full_render.prepare_frame=count:42 avg_us:46 max_us:105,full_render.render_virtual=count:42 avg_us:561 max_us:1240,full_render.serialize=count:24 avg_us:129 max_us:187,full_render.total=count:42 avg_us:1889 max_us:5459,full_render.try_send=count:24 avg_us:46 max_us:76,full_render.visible_hyperlinks=count:42 avg_us:31 max_us:86,pty.ghostty_write=count:25426 avg_us:0 max_us:53,retained.total=count:34 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3506485,full_render.invoke=42,full_render.sent=25,full_render.skip_identical=17,loop.tick=132,prepare_frame.semantic.changed=25,prepare_frame.semantic.skip_current=17,pty.bytes=25681586,pty.request_render=25427,pty.request_render_delayed=6250,render.attempt=42,render.attempt.pty_dirty=42,render.attempt.pty_sources=46,render.request.signal=107,retained.attempt=34,retained_fallback.graphics_cache_active=34,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:42 avg_us:76 max_us:94,full_render.graphics_encode=count:42 avg_us:1137 max_us:4868,full_render.prepare_frame=count:42 avg_us:42 max_us:90,full_render.render_virtual=count:42 avg_us:542 max_us:653,full_render.serialize=count:25 avg_us:127 max_us:185,full_render.total=count:42 avg_us:1936 max_us:5770,full_render.try_send=count:25 avg_us:48 max_us:77,full_render.visible_hyperlinks=count:42 avg_us:25 max_us:59,pty.ghostty_write=count:25427 avg_us:0 max_us:86,retained.total=count:34 avg_us:0 max_us:1"
+    },
+    {
+      "counters": "full_render.bytes=3593109,full_render.invoke=43,full_render.sent=26,full_render.skip_identical=17,loop.tick=132,prepare_frame.semantic.changed=26,prepare_frame.semantic.skip_current=17,pty.bytes=25681586,pty.request_render=25428,pty.request_render_delayed=6250,render.attempt=43,render.attempt.pty_dirty=42,render.attempt.pty_sources=46,render.request.signal=110,retained.attempt=35,retained_fallback.graphics_cache_active=35,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:43 avg_us:76 max_us:84,full_render.graphics_encode=count:43 avg_us:1192 max_us:5252,full_render.prepare_frame=count:43 avg_us:42 max_us:106,full_render.render_virtual=count:43 avg_us:558 max_us:660,full_render.serialize=count:26 avg_us:127 max_us:187,full_render.total=count:43 avg_us:2011 max_us:6148,full_render.try_send=count:26 avg_us:48 max_us:78,full_render.visible_hyperlinks=count:43 avg_us:28 max_us:83,pty.ghostty_write=count:25428 avg_us:0 max_us:67,retained.total=count:35 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3522089,full_render.invoke=45,full_render.sent=25,full_render.skip_identical=20,full_render_cause.server_events=1,loop.tick=138,prepare_frame.semantic.changed=25,prepare_frame.semantic.skip_current=20,pty.bytes=25681586,pty.request_render=25427,pty.request_render_delayed=6250,render.attempt=45,render.attempt.pty_dirty=44,render.attempt.pty_sources=46,render.request.signal=114,retained.attempt=37,retained_fallback.graphics_cache_active=37,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:45 avg_us:75 max_us:83,full_render.graphics_encode=count:45 avg_us:1216 max_us:5576,full_render.prepare_frame=count:45 avg_us:45 max_us:91,full_render.render_virtual=count:45 avg_us:541 max_us:599,full_render.serialize=count:25 avg_us:129 max_us:190,full_render.total=count:45 avg_us:2011 max_us:6467,full_render.try_send=count:25 avg_us:48 max_us:89,full_render.visible_hyperlinks=count:45 avg_us:27 max_us:86,pty.ghostty_write=count:25427 avg_us:0 max_us:82,retained.total=count:37 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3532758,full_render.invoke=42,full_render.sent=25,full_render.skip_identical=17,full_render_cause.server_events=1,loop.tick=126,prepare_frame.semantic.changed=25,prepare_frame.semantic.skip_current=17,pty.bytes=25679538,pty.request_render=25425,pty.request_render_delayed=6249,render.attempt=42,render.attempt.pty_dirty=41,render.attempt.pty_sources=45,render.request.signal=110,retained.attempt=34,retained_fallback.graphics_cache_active=34,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:42 avg_us:76 max_us:89,full_render.graphics_encode=count:42 avg_us:1376 max_us:5834,full_render.prepare_frame=count:42 avg_us:43 max_us:110,full_render.render_virtual=count:42 avg_us:553 max_us:646,full_render.serialize=count:25 avg_us:130 max_us:189,full_render.total=count:42 avg_us:2188 max_us:6701,full_render.try_send=count:25 avg_us:46 max_us:73,full_render.visible_hyperlinks=count:42 avg_us:26 max_us:61,pty.ghostty_write=count:25425 avg_us:0 max_us:129,retained.total=count:34 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3459880,full_render.invoke=42,full_render.sent=24,full_render.skip_identical=18,loop.tick=126,prepare_frame.semantic.changed=24,prepare_frame.semantic.skip_current=18,pty.bytes=25681586,pty.request_render=25426,pty.request_render_delayed=6250,render.attempt=42,render.attempt.pty_dirty=40,render.attempt.pty_sources=43,render.request.signal=111,retained.attempt=34,retained_fallback.graphics_cache_active=34,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:42 avg_us:73 max_us:81,full_render.graphics_encode=count:42 avg_us:1459 max_us:6388,full_render.prepare_frame=count:42 avg_us:44 max_us:111,full_render.render_virtual=count:42 avg_us:539 max_us:614,full_render.serialize=count:24 avg_us:129 max_us:193,full_render.total=count:42 avg_us:2250 max_us:7247,full_render.try_send=count:24 avg_us:47 max_us:75,full_render.visible_hyperlinks=count:42 avg_us:26 max_us:66,pty.ghostty_write=count:25426 avg_us:0 max_us:85,retained.total=count:34 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3454401,full_render.invoke=41,full_render.sent=26,full_render.skip_identical=15,loop.tick=127,prepare_frame.semantic.changed=26,prepare_frame.semantic.skip_current=15,pty.bytes=25150488,pty.request_render=24900,pty.request_render_delayed=6121,render.attempt=41,render.attempt.pty_dirty=39,render.attempt.pty_sources=41,render.request.signal=105,retained.attempt=33,retained_fallback.graphics_cache_active=33,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:41 avg_us:75 max_us:94,full_render.graphics_encode=count:41 avg_us:1408 max_us:6451,full_render.prepare_frame=count:41 avg_us:39 max_us:88,full_render.render_virtual=count:41 avg_us:539 max_us:590,full_render.serialize=count:26 avg_us:126 max_us:185,full_render.total=count:41 avg_us:2209 max_us:7370,full_render.try_send=count:26 avg_us:49 max_us:78,full_render.visible_hyperlinks=count:41 avg_us:28 max_us:73,pty.ghostty_write=count:24900 avg_us:0 max_us:91,retained.total=count:33 avg_us:0 max_us:0"
+    },
+    {
+      "counters": "full_render.bytes=3624740,full_render.invoke=42,full_render.sent=26,full_render.skip_identical=16,full_render_cause.server_events=1,loop.tick=126,prepare_frame.semantic.changed=26,prepare_frame.semantic.skip_current=16,pty.bytes=23646575,pty.request_render=23411,pty.request_render_delayed=5755,render.attempt=42,render.attempt.pty_dirty=40,render.attempt.pty_sources=43,render.request.signal=110,retained.attempt=34,retained_fallback.graphics_cache_active=34,retained_gate.needs_full_render=8",
+      "durations": "full_render.frame_build=count:42 avg_us:76 max_us:98,full_render.graphics_encode=count:42 avg_us:1601 max_us:6756,full_render.prepare_frame=count:42 avg_us:40 max_us:90,full_render.render_virtual=count:42 avg_us:559 max_us:685,full_render.serialize=count:26 avg_us:127 max_us:193,full_render.total=count:42 avg_us:2418 max_us:7646,full_render.try_send=count:26 avg_us:48 max_us:79,full_render.visible_hyperlinks=count:42 avg_us:25 max_us:55,pty.ghostty_write=count:23411 avg_us:0 max_us:118,retained.total=count:34 avg_us:0 max_us:1"
+    }
+  ],
+  "wall_seconds": 64.1
+}
