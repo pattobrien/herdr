@@ -1,0 +1,3 @@
+[experimental]
+kitty_graphics = true
+allow_nested = true
