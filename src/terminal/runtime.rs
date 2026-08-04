@@ -452,6 +452,11 @@ impl TerminalRuntime {
         self.0.wheel_routing()
     }
 
+    /// The pane's current OSC 22 pointer shape ("" = host default).
+    pub fn pointer_shape(&self) -> String {
+        self.0.pointer_shape()
+    }
+
     pub(crate) fn screen_text_snapshot(
         &self,
     ) -> Option<(

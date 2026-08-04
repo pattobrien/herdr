@@ -1397,6 +1397,9 @@ pub struct AppState {
     pub(crate) previous_pane_focus: Option<PaneFocusTarget>,
     pub selected: usize,
     pub mode: Mode,
+    /// Last host mouse position seen, in screen cells. Used to resolve which
+    /// pane's OSC 22 pointer shape the host cursor should mirror.
+    pub last_pointer_screen_pos: Option<(u16, u16)>,
     pub should_quit: bool,
     /// In monolithic --no-session mode, detach exits the app because there is no server to detach from.
     pub detach_exits: bool,
@@ -1766,6 +1769,7 @@ impl AppState {
             previous_pane_focus: None,
             selected: 0,
             mode: Mode::Navigate,
+            last_pointer_screen_pos: None,
             should_quit: false,
             detach_exits: false,
             detach_requested: false,

@@ -75,6 +75,7 @@ impl AppState {
         terminal_runtimes: &TerminalRuntimeRegistry,
         mouse: MouseEvent,
     ) {
+        self.last_pointer_screen_pos = Some((mouse.column, mouse.row));
         if self.mode != Mode::Terminal {
             return;
         }
@@ -103,6 +104,7 @@ impl AppState {
         terminal_runtimes: &mut TerminalRuntimeRegistry,
         mouse: MouseEvent,
     ) -> Option<MouseAction> {
+        self.last_pointer_screen_pos = Some((mouse.column, mouse.row));
         if self.mode == Mode::Onboarding {
             self.handle_onboarding_mouse(mouse);
             return None;
@@ -1423,7 +1425,7 @@ impl AppState {
         })
     }
 
-    pub(super) fn pane_at(&self, col: u16, row: u16) -> Option<&PaneInfo> {
+    pub(crate) fn pane_at(&self, col: u16, row: u16) -> Option<&PaneInfo> {
         self.view.pane_infos.iter().find(|p| {
             col >= p.inner_rect.x
                 && col < p.inner_rect.x + p.inner_rect.width

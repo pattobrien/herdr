@@ -305,6 +305,8 @@ pub struct HeadlessServer {
     next_client_id: u64,
     /// The client currently driving the shared pane runtime size, theme, and input keybindings.
     foreground_client_id: Option<u64>,
+    /// Last OSC 22 pointer shape pushed to the foreground client ("" = default).
+    last_host_pointer_shape: String,
     /// Server-owned keybindings, restored when foreground clients use server mode.
     server_keybindings: crate::config::LiveKeybindConfig,
     /// Full server config warning shown to clients that use server keybindings.
@@ -505,6 +507,7 @@ impl HeadlessServer {
             #[cfg(unix)]
             next_client_id: 1,
             foreground_client_id: None,
+            last_host_pointer_shape: String::new(),
             server_keybindings,
             server_config_diagnostic,
             server_config_diagnostic_without_keybindings,
@@ -1466,6 +1469,10 @@ impl HeadlessServer {
 
         let changed = self.foreground_client_id != Some(client_id);
         self.foreground_client_id = Some(client_id);
+        if changed {
+            // A new foreground client starts with the host default cursor.
+            self.last_host_pointer_shape = String::new();
+        }
         self.sync_foreground_client_state();
         changed
     }
@@ -1474,6 +1481,9 @@ impl HeadlessServer {
         let next_foreground = latest_app_client(&self.clients);
         let changed = next_foreground != self.foreground_client_id;
         self.foreground_client_id = next_foreground;
+        if changed {
+            self.last_host_pointer_shape = String::new();
+        }
         self.sync_foreground_client_state();
         changed
     }
@@ -2107,6 +2117,13 @@ impl HeadlessServer {
                 }
                 true
             }
+            AppEvent::PanePointerShape { pane_id, shape } => {
+                debug!(pane = pane_id.raw(), shape = %shape, "pane pointer shape changed");
+                // The pane's shape state already changed; re-resolve against the
+                // hovered pane so only the pane under the cursor drives the host.
+                self.sync_host_pointer_shape();
+                false
+            }
             AppEvent::PrefixInputSource { active } => {
                 // Input-source switching is a client-local host side effect; forward it to the
                 // foreground client (which owns the real TIS switch + run-loop pump), like clipboard.
@@ -2471,6 +2488,39 @@ impl HeadlessServer {
         for client_id in broken_clients {
             self.remove_client_and_resize_if_needed(client_id);
         }
+    }
+
+    /// Resolves the pointer shape the host cursor should currently show:
+    /// the hovered pane's OSC 22 shape, or "" (host default) elsewhere.
+    fn effective_host_pointer_shape(&self) -> String {
+        if self.app.state.mode != crate::app::Mode::Terminal {
+            return String::new();
+        }
+        let Some((col, row)) = self.app.state.last_pointer_screen_pos else {
+            return String::new();
+        };
+        let Some(ws_idx) = self.app.state.active else {
+            return String::new();
+        };
+        let Some(pane_id) = self.app.state.pane_at(col, row).map(|info| info.id) else {
+            return String::new();
+        };
+        self.app
+            .state
+            .runtime_for_pane_in_workspace(&self.app.terminal_runtimes, ws_idx, pane_id)
+            .map(|rt| rt.pointer_shape())
+            .unwrap_or_default()
+    }
+
+    /// Pushes the effective pointer shape to the foreground client when it
+    /// changed since the last push.
+    fn sync_host_pointer_shape(&mut self) {
+        let shape = self.effective_host_pointer_shape();
+        if shape == self.last_host_pointer_shape {
+            return;
+        }
+        self.last_host_pointer_shape = shape.clone();
+        self.send_to_foreground_client(ServerMessage::PointerShape { shape });
     }
 
     /// Sends a client-local side effect to the foreground client only.
@@ -2887,7 +2937,9 @@ impl HeadlessServer {
                 } else {
                     Vec::new()
                 };
-                self.handle_client_input_events(client_id, events)
+                let changed = self.handle_client_input_events(client_id, events);
+                self.sync_host_pointer_shape();
+                changed
             }
             ServerEvent::ClientInputEvents { client_id, events } => {
                 if self.handoff_in_progress {
@@ -2913,7 +2965,9 @@ impl HeadlessServer {
                     .iter()
                     .map(crate::protocol::ClientInputEvent::to_raw_input_event)
                     .collect();
-                self.handle_client_input_events(client_id, events)
+                let changed = self.handle_client_input_events(client_id, events);
+                self.sync_host_pointer_shape();
+                changed
             }
             ServerEvent::ClientPasteRejected {
                 client_id,
@@ -4988,6 +5042,7 @@ mod tests {
             #[cfg(unix)]
             next_client_id: 1,
             foreground_client_id: None,
+            last_host_pointer_shape: String::new(),
             server_keybindings,
             server_config_diagnostic: None,
             server_config_diagnostic_without_keybindings: None,

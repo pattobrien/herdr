@@ -589,6 +589,7 @@ fn restore_terminal_state(
         DisableMouseCapture
     );
     let _ = crate::terminal_modes::clear_host_mouse_reporting(&mut io::stdout());
+    write_host_pointer_shape("");
     #[cfg(windows)]
     if let Some(mode) = restore_windows_input_mode {
         restore_windows_input_mode_value(mode);
@@ -1616,6 +1617,10 @@ async fn run_client_loop(
                     write_window_title(title.as_deref());
                     let _ = io::stdout().flush();
                 }
+                ServerMessage::PointerShape { shape } => {
+                    write_host_pointer_shape(&shape);
+                    let _ = io::stdout().flush();
+                }
                 ServerMessage::ReloadSoundConfig => {
                     reload_local_client_config(
                         &mut state.sound_config,
@@ -2021,6 +2026,12 @@ fn window_title_osc(title: Option<&str>) -> Vec<u8> {
 
 fn write_window_title(title: Option<&str>) {
     let _ = io::stdout().write_all(&window_title_osc(title));
+}
+
+/// Sets the host terminal's mouse pointer shape via OSC 22. An empty shape
+/// restores the host default.
+fn write_host_pointer_shape(shape: &str) {
+    let _ = io::stdout().write_all(format!("\x1b]22;{shape}\x1b\\").as_bytes());
 }
 
 // ---------------------------------------------------------------------------

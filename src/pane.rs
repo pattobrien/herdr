@@ -1894,6 +1894,17 @@ impl PaneRuntime {
                         );
                     }
                 }
+                if let Some(shape) = result.pointer_shape {
+                    if let Err(err) =
+                        read_events.try_send(AppEvent::PanePointerShape { pane_id, shape })
+                    {
+                        warn!(
+                            pane = pane_id.raw(),
+                            err = %err,
+                            "failed to queue OSC 22 pointer shape change"
+                        );
+                    }
+                }
                 PtyReadResult {
                     terminal_responses: result.terminal_responses,
                 }
@@ -2053,6 +2064,16 @@ impl PaneRuntime {
                             pane = pane_id.raw(),
                             err = %err,
                             "failed to send OSC 52 clipboard write"
+                        );
+                    }
+                }
+                if let Some(shape) = result.pointer_shape {
+                    if let Err(err) = events.try_send(AppEvent::PanePointerShape { pane_id, shape })
+                    {
+                        warn!(
+                            pane = pane_id.raw(),
+                            err = %err,
+                            "failed to send OSC 22 pointer shape change"
                         );
                     }
                 }
@@ -2749,6 +2770,11 @@ impl PaneRuntime {
 
     pub fn wheel_routing(&self) -> Option<WheelRouting> {
         self.terminal.wheel_routing()
+    }
+
+    /// The pane's current OSC 22 pointer shape ("" = host default).
+    pub fn pointer_shape(&self) -> String {
+        self.terminal.pointer_shape()
     }
 
     pub(crate) fn screen_text_snapshot(

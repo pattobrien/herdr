@@ -711,6 +711,12 @@ pub enum ServerMessage {
         /// Whether the ASCII input source should be active.
         active: bool,
     },
+
+    /// Mirror the hovered pane's OSC 22 pointer shape on the host terminal.
+    PointerShape {
+        /// Kitty pointer-shape payload; empty restores the host default.
+        shape: String,
+    },
 }
 
 // ---------------------------------------------------------------------------

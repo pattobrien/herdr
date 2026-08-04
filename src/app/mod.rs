@@ -526,6 +526,7 @@ impl App {
             previous_pane_focus: None,
             selected,
             mode,
+            last_pointer_screen_pos: None,
             should_quit: false,
             detach_exits: no_session,
             detach_requested: false,

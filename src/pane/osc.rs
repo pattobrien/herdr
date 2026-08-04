@@ -586,6 +586,49 @@ impl Default for OscDebugTracker {
     }
 }
 
+/// Tracks OSC 22 (pointer shape) requests from the pane so the host cursor
+/// can mirror them while this pane is hovered. An empty shape resets the
+/// pointer to the host default.
+#[derive(Debug, Default)]
+pub(super) struct PointerShapeOscTracker {
+    collector: OscStreamCollector,
+    current: String,
+}
+
+impl PointerShapeOscTracker {
+    /// Feeds pane output and returns the new shape when it changed.
+    pub(super) fn observe(&mut self, bytes: &[u8]) -> Option<String> {
+        let mut latest: Option<String> = None;
+        self.collector.observe(bytes, |body| {
+            if let Some(shape) = parse_pointer_shape(body) {
+                latest = Some(shape);
+            }
+        });
+        let latest = latest?;
+        if latest == self.current {
+            return None;
+        }
+        self.current = latest.clone();
+        Some(latest)
+    }
+
+    pub(super) fn current(&self) -> &str {
+        &self.current
+    }
+}
+
+fn parse_pointer_shape(body: &[u8]) -> Option<String> {
+    let payload = body.strip_prefix(b"22;")?;
+    const MAX_CHARS: usize = 128;
+    let text = String::from_utf8_lossy(payload);
+    Some(
+        text.chars()
+            .filter(|ch| !ch.is_control())
+            .take(MAX_CHARS)
+            .collect(),
+    )
+}
+
 fn osc_debug_enabled_from_env() -> bool {
     std::env::var("HERDR_DEBUG_OSC_EVIDENCE")
         .map(|value| {
@@ -1183,6 +1226,36 @@ mod tests {
                     payload: "status=working".to_string(),
                 },
             ]
+        );
+    }
+
+    #[test]
+    fn pointer_shape_tracker_reports_shape_changes() {
+        let mut tracker = PointerShapeOscTracker::default();
+
+        assert_eq!(
+            tracker.observe(b"\x1b]22;pointer\x1b\\"),
+            Some("pointer".to_string())
+        );
+        assert_eq!(tracker.current(), "pointer");
+        // Same shape again is not a change.
+        assert_eq!(tracker.observe(b"\x1b]22;pointer\x07"), None);
+        // Empty payload resets to the default shape.
+        assert_eq!(tracker.observe(b"\x1b]22;\x07"), Some(String::new()));
+        assert_eq!(tracker.current(), "");
+    }
+
+    #[test]
+    fn pointer_shape_tracker_handles_split_sequences_and_ignores_other_oscs() {
+        let mut tracker = PointerShapeOscTracker::default();
+
+        assert_eq!(tracker.observe(b"\x1b]22;te"), None);
+        assert_eq!(tracker.observe(b"xt\x1b\\"), Some("text".to_string()));
+        assert_eq!(tracker.observe(b"\x1b]0;title\x07\x1b]52;c;aGk=\x07"), None);
+        // Latest shape in a chunk wins.
+        assert_eq!(
+            tracker.observe(b"\x1b]22;grab\x07\x1b]22;grabbing\x07"),
+            Some("grabbing".to_string())
         );
     }
 
