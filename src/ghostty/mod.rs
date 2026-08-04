@@ -1363,6 +1363,14 @@ impl Terminal {
         self.get_u32(ffi::GhosttyTerminalData_GHOSTTY_TERMINAL_DATA_HEIGHT_PX)
     }
 
+    /// Cell size in pixels as set by the last resize, or (0, 0) when the
+    /// host never reported pixel dimensions.
+    pub(crate) fn cell_size_px(&self) -> Result<(u32, u32), Error> {
+        let cols = u32::from(self.cols()?).max(1);
+        let rows = u32::from(self.rows()?).max(1);
+        Ok((self.width_px()? / cols, self.height_px()? / rows))
+    }
+
     fn get_u16(&self, data: ffi::GhosttyTerminalData) -> Result<u16, Error> {
         let mut out = 0u16;
         // SAFETY: out points to a u16 matching the requested terminal data type.

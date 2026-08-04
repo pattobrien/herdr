@@ -55,21 +55,39 @@ pub(super) fn ghostty_mods_from_key_modifiers(modifiers: crossterm::event::KeyMo
 
 pub(super) fn ghostty_mouse_encoder_for_terminal(
     terminal: &crate::ghostty::Terminal,
-) -> Option<crate::ghostty::MouseEncoder> {
+) -> Option<(crate::ghostty::MouseEncoder, (u32, u32))> {
     let mut encoder = crate::ghostty::MouseEncoder::new().ok()?;
     encoder.set_from_terminal(terminal);
-    if terminal
-        .mode_get(crate::ghostty::MODE_MOUSE_SGR_PIXELS)
-        .ok()?
-    {
-        // Herdr receives host mouse positions in terminal cells. Downgrade
-        // SGR-pixels to normal SGR so forwarded coordinates stay cell-local.
-        encoder.set_format(crate::ghostty::MOUSE_FORMAT_SGR);
-    }
     let cols = terminal.cols().ok()? as u32;
     let rows = terminal.rows().ok()? as u32;
-    encoder.set_size(cols, rows, 1, 1);
-    Some(encoder)
+    let cell = terminal
+        .cell_size_px()
+        .ok()
+        .filter(|&(w, h)| w > 1 && h > 1);
+    let Some((cell_w, cell_h)) = cell else {
+        if terminal
+            .mode_get(crate::ghostty::MODE_MOUSE_SGR_PIXELS)
+            .ok()?
+        {
+            // Without a known cell size we cannot produce pixel coordinates.
+            // Downgrade SGR-pixels to normal SGR so coordinates stay cell-local.
+            encoder.set_format(crate::ghostty::MOUSE_FORMAT_SGR);
+        }
+        encoder.set_size(cols, rows, 1, 1);
+        return Some((encoder, (1, 1)));
+    };
+    // Host mouse positions arrive in cells; encode them as the cell's center
+    // in surface pixels so SGR-pixels panes get real pixel coordinates. Cell
+    // formats divide by the cell size again and land in the same cell.
+    encoder.set_size(cols * cell_w, rows * cell_h, cell_w, cell_h);
+    Some((encoder, (cell_w, cell_h)))
+}
+
+pub(super) fn ghostty_mouse_position_px(column: u16, row: u16, cell: (u32, u32)) -> (f32, f32) {
+    (
+        (column as f32 + 0.5) * cell.0 as f32,
+        (row as f32 + 0.5) * cell.1 as f32,
+    )
 }
 
 pub(super) fn ghostty_mouse_event_from_button_kind(
@@ -77,6 +95,7 @@ pub(super) fn ghostty_mouse_event_from_button_kind(
     column: u16,
     row: u16,
     modifiers: crossterm::event::KeyModifiers,
+    cell: (u32, u32),
 ) -> Option<crate::ghostty::MouseEvent> {
     let mut event = crate::ghostty::MouseEvent::new().ok()?;
     let (action, button) = match kind {
@@ -125,7 +144,8 @@ pub(super) fn ghostty_mouse_event_from_button_kind(
         event.clear_button();
     }
     event.set_mods(ghostty_mods_from_key_modifiers(modifiers));
-    event.set_position(column as f32, row as f32);
+    let (x, y) = ghostty_mouse_position_px(column, row, cell);
+    event.set_position(x, y);
     Some(event)
 }
 
@@ -134,6 +154,7 @@ pub(super) fn ghostty_mouse_event_from_motion_kind(
     column: u16,
     row: u16,
     modifiers: crossterm::event::KeyModifiers,
+    cell: (u32, u32),
 ) -> Option<crate::ghostty::MouseEvent> {
     if kind != crossterm::event::MouseEventKind::Moved {
         return None;
@@ -143,7 +164,8 @@ pub(super) fn ghostty_mouse_event_from_motion_kind(
     event.set_action(crate::ghostty::MOUSE_ACTION_MOTION);
     event.clear_button();
     event.set_mods(ghostty_mods_from_key_modifiers(modifiers));
-    event.set_position(column as f32, row as f32);
+    let (x, y) = ghostty_mouse_position_px(column, row, cell);
+    event.set_position(x, y);
     Some(event)
 }
 
@@ -152,6 +174,7 @@ pub(super) fn ghostty_mouse_event_from_wheel_kind(
     column: u16,
     row: u16,
     modifiers: crossterm::event::KeyModifiers,
+    cell: (u32, u32),
 ) -> Option<crate::ghostty::MouseEvent> {
     let mut event = crate::ghostty::MouseEvent::new().ok()?;
     event.set_action(crate::ghostty::MOUSE_ACTION_PRESS);
@@ -164,7 +187,8 @@ pub(super) fn ghostty_mouse_event_from_wheel_kind(
     };
     event.set_button(button);
     event.set_mods(ghostty_mods_from_key_modifiers(modifiers));
-    event.set_position(column as f32, row as f32);
+    let (x, y) = ghostty_mouse_position_px(column, row, cell);
+    event.set_position(x, y);
     Some(event)
 }
 
