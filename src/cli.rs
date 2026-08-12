@@ -96,6 +96,7 @@ pub fn maybe_run(args: &[String]) -> std::io::Result<CommandOutcome> {
         "notification" => notification::run_notification_command(&args[2..])?,
         "agent" => agent::run_agent_command(&args[2..])?,
         "terminal" => run_terminal_command(&args[2..])?,
+        "sidebar" => run_sidebar_command(&args[2..])?,
         "pane" => pane::run_pane_command(&args[2..])?,
         "plugin" => plugin::run_plugin_command(&args[2..])?,
         "integration" => integration::run_integration_command(&args[2..])?,
@@ -690,6 +691,29 @@ fn terminal_title(args: &[String]) -> std::io::Result<i32> {
         _ => {
             eprintln!("usage: herdr terminal title set <title>");
             eprintln!("       herdr terminal title clear");
+            Ok(2)
+        }
+    }
+}
+
+fn run_sidebar_command(args: &[String]) -> std::io::Result<i32> {
+    match args.first().map(|arg| arg.as_str()) {
+        Some("toggle") => {
+            if args.len() != 1 {
+                eprintln!("usage: herdr sidebar toggle");
+                return Ok(2);
+            }
+            print_response(&send_request(&Request {
+                id: "cli:sidebar:toggle".into(),
+                method: Method::UiSidebarToggle(EmptyParams::default()),
+            })?)
+        }
+        Some("help" | "--help" | "-h") => {
+            eprintln!("usage: herdr sidebar toggle");
+            Ok(0)
+        }
+        _ => {
+            eprintln!("usage: herdr sidebar toggle");
             Ok(2)
         }
     }

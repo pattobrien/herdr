@@ -4529,6 +4529,22 @@
         {
           "properties": {
             "method": {
+              "const": "ui.sidebar.toggle",
+              "type": "string"
+            },
+            "params": {
+              "$ref": "#/schemas/request/$defs/EmptyParams"
+            }
+          },
+          "required": [
+            "method",
+            "params"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "method": {
               "const": "session.snapshot",
               "type": "string"
             },
@@ -9639,6 +9655,22 @@
                 "type",
                 "status",
                 "diagnostics"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "collapsed": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "const": "sidebar_state",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "collapsed"
               ],
               "type": "object"
             },

@@ -245,6 +245,9 @@ pub enum ResponseResult {
         status: crate::config::ConfigReloadStatus,
         diagnostics: Vec<String>,
     },
+    SidebarState {
+        collapsed: bool,
+    },
     Ok {},
 }
 
