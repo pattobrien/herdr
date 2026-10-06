@@ -696,6 +696,37 @@ fn encode_kitty_data(out: &mut Vec<u8>, control: &str, data: &[u8]) {
     write_kitty_data(out, control, data).expect("writing to Vec cannot fail");
 }
 
+const COMPRESS_MIN_BYTES: usize = 4096;
+
+/// Inline upload for a host terminal: raw RGB/RGBA pixels are zlib-deflated (`o=z`)
+/// when that shrinks the payload; PNG and small payloads pass through unchanged.
+pub(crate) fn write_kitty_upload(
+    out: &mut impl Write,
+    control: &str,
+    data: &[u8],
+) -> std::io::Result<()> {
+    match deflate_raw_pixels(control, data) {
+        Some(compressed) => write_kitty_data(out, &format!("{control},o=z"), &compressed),
+        None => write_kitty_data(out, control, data),
+    }
+}
+
+fn deflate_raw_pixels(control: &str, data: &[u8]) -> Option<Vec<u8>> {
+    let raw_pixels = control
+        .split(',')
+        .any(|part| matches!(part, "f=24" | "f=32"));
+    if !raw_pixels || data.len() < COMPRESS_MIN_BYTES {
+        return None;
+    }
+    let mut encoder = flate2::write::ZlibEncoder::new(
+        Vec::with_capacity(data.len() / 4),
+        flate2::Compression::fast(),
+    );
+    encoder.write_all(data).ok()?;
+    let compressed = encoder.finish().ok()?;
+    (compressed.len() < data.len()).then_some(compressed)
+}
+
 pub(crate) fn write_kitty_data(
     out: &mut impl Write,
     control: &str,
@@ -720,6 +751,80 @@ pub(crate) fn write_kitty_data(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn decode_kitty_upload(bytes: &[u8]) -> (String, Vec<u8>) {
+        let text = std::str::from_utf8(bytes).unwrap();
+        let mut control = None;
+        let mut payload = Vec::new();
+        for command in text.split("\x1b\\").filter(|part| !part.is_empty()) {
+            let command = command.strip_prefix("\x1b_G").unwrap();
+            let (keys, encoded) = command.split_once(';').unwrap();
+            control.get_or_insert_with(|| keys.to_owned());
+            payload.extend(
+                base64::engine::general_purpose::STANDARD
+                    .decode(encoded)
+                    .unwrap(),
+            );
+        }
+        (control.unwrap(), payload)
+    }
+
+    fn inflate(bytes: &[u8]) -> Vec<u8> {
+        let mut out = Vec::new();
+        std::io::Read::read_to_end(&mut flate2::read::ZlibDecoder::new(bytes), &mut out).unwrap();
+        out
+    }
+
+    #[test]
+    fn large_raw_uploads_are_deflated_and_round_trip() {
+        for format_code in [24, 32] {
+            let data = (0..COMPRESS_MIN_BYTES * 3)
+                .map(|index| (index % 11) as u8)
+                .collect::<Vec<_>>();
+            let control = format!("a=t,t=d,f={format_code},s=64,v=48,i=10001,q=2");
+            let mut out = Vec::new();
+            write_kitty_upload(&mut out, &control, &data).unwrap();
+            let (keys, payload) = decode_kitty_upload(&out);
+            assert_eq!(keys, format!("{control},o=z,m=0"));
+            assert!(payload.len() < data.len());
+            assert_eq!(inflate(&payload), data);
+        }
+    }
+
+    #[test]
+    fn png_and_small_uploads_stay_raw() {
+        let png = vec![9; COMPRESS_MIN_BYTES * 2];
+        let mut out = Vec::new();
+        write_kitty_upload(&mut out, "a=t,t=d,f=100,s=64,v=48,i=10001,q=2", &png).unwrap();
+        let (keys, payload) = decode_kitty_upload(&out);
+        assert!(!keys.contains("o=z"), "{keys}");
+        assert_eq!(payload, png);
+
+        let small = vec![9; COMPRESS_MIN_BYTES - 1];
+        let mut out = Vec::new();
+        write_kitty_upload(&mut out, "a=t,t=d,f=32,s=8,v=8,i=10001,q=2", &small).unwrap();
+        let (keys, payload) = decode_kitty_upload(&out);
+        assert!(!keys.contains("o=z"), "{keys}");
+        assert_eq!(payload, small);
+    }
+
+    #[test]
+    fn incompressible_raw_uploads_stay_raw() {
+        let mut seed = 0x9e37_79b9_7f4a_7c15_u64;
+        let noise = (0..COMPRESS_MIN_BYTES * 2)
+            .map(|_| {
+                seed ^= seed << 13;
+                seed ^= seed >> 7;
+                seed ^= seed << 17;
+                seed as u8
+            })
+            .collect::<Vec<_>>();
+        let mut out = Vec::new();
+        write_kitty_upload(&mut out, "a=t,t=d,f=24,s=64,v=32,i=10001,q=2", &noise).unwrap();
+        let (keys, payload) = decode_kitty_upload(&out);
+        assert!(!keys.contains("o=z"), "{keys}");
+        assert_eq!(payload, noise);
+    }
 
     #[test]
     fn deferred_updates_match_inline_for_rgb_and_rgba() {
