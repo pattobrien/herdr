@@ -2015,6 +2015,7 @@ impl HeadlessServer {
                 }
                 self.send_to_client(client_id, completion_message);
                 self.send_to_client(client_id, snapshot_message);
+                self.send_pane_pointer_shapes_to_client(client_id);
                 if surface_active {
                     self.foreground_client_id = Some(client_id);
                 }

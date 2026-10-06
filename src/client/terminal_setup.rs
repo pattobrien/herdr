@@ -652,6 +652,7 @@ fn restore_terminal_state(
         DisableBracketedPaste
     );
     let _ = set_mouse_capture(false, false);
+    let _ = crate::terminal_effects::write_host_pointer_shape(&mut io::stdout(), "");
     #[cfg(windows)]
     if let Some(mode) = restore_windows_input_mode {
         restore_windows_input_mode_value(mode);

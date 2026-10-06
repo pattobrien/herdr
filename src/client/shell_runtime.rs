@@ -128,6 +128,29 @@ pub(super) fn clear_endpoint_host_effects(
     state.pane_keyboard_report_all = false;
     let _ = sync_client_shell_keyboard_report_all(state);
     let _ = crate::terminal_effects::write_window_title(&mut std::io::stdout(), None);
+    if let Some(shell) = state.shell.as_mut() {
+        shell.forget_host_pointer_shape();
+    }
+    let _ = crate::terminal_effects::write_host_pointer_shape(&mut std::io::stdout(), "");
+}
+
+pub(super) fn apply_client_shell_host_effects(
+    state: &mut ClientState,
+    prefix_input_source: &mut impl crate::platform::PrefixInputSource,
+) {
+    apply_client_shell_input_source_changes(state, prefix_input_source);
+    apply_client_shell_host_pointer_shape(state);
+}
+
+pub(super) fn apply_client_shell_host_pointer_shape(state: &mut ClientState) {
+    let Some(shape) = state
+        .shell
+        .as_mut()
+        .and_then(shell::ClientShellState::take_host_pointer_shape_change)
+    else {
+        return;
+    };
+    let _ = crate::terminal_effects::write_host_pointer_shape(&mut std::io::stdout(), &shape);
 }
 
 pub(super) fn apply_client_shell_input_source_changes(
@@ -664,7 +687,7 @@ pub(super) fn install_client_shell_snapshot(
     } else {
         (None, None, Vec::new())
     };
-    apply_client_shell_input_source_changes(state, prefix_input_source);
+    apply_client_shell_host_effects(state, prefix_input_source);
     state.present_graphics(&graphics_cleanup);
     if let Some(resize) = resize {
         endpoints.send_to(endpoint_id, &resize);
@@ -689,7 +712,7 @@ pub(super) fn finish_client_shell_input(
     prefix_input_source: &mut impl crate::platform::PrefixInputSource,
     scheduled_activation: &mut Option<ClientLoopEvent>,
 ) -> Result<bool, ClientError> {
-    apply_client_shell_input_source_changes(state, prefix_input_source);
+    apply_client_shell_host_effects(state, prefix_input_source);
     if outcome.detach {
         let _ = write_to_server(endpoints, &ClientMessage::Detach);
         return Ok(true);
