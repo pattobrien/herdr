@@ -742,6 +742,11 @@ fn terminal_command() -> Command {
                 )
                 .subcommand(Command::new("clear").about("Clear the outer terminal title")),
         )
+        .subcommand(
+            Command::new("sidebar")
+                .about("Control the foreground client's sidebar")
+                .subcommand(Command::new("toggle").about("Collapse or expand the sidebar")),
+        )
 }
 
 fn session_command() -> Command {

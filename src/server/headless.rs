@@ -1522,6 +1522,34 @@ impl HeadlessServer {
         .unwrap_or_else(|_| "{}".to_string())
     }
 
+    fn handle_client_sidebar_toggle_api(&mut self, id: String) -> String {
+        use api::schema::{ClientSidebarToggleReason, ResponseResult};
+
+        let changed = self
+            .foreground_client_id
+            .filter(|client_id| {
+                self.clients
+                    .get(client_id)
+                    .is_some_and(|client| client.writer.is_some())
+            })
+            .is_some_and(|client_id| {
+                self.send_to_client(
+                    client_id,
+                    crate::protocol::endpoint::sidebar_toggle_message(),
+                )
+            });
+        let reason = if changed {
+            ClientSidebarToggleReason::Toggled
+        } else {
+            ClientSidebarToggleReason::NoForegroundClient
+        };
+        serde_json::to_string(&api::schema::SuccessResponse {
+            id,
+            result: ResponseResult::ClientSidebarToggle { changed, reason },
+        })
+        .unwrap_or_else(|_| "{}".to_string())
+    }
+
     fn drain_client_config_reload_request(&mut self) {
         if !self.app.state.request_client_config_reload {
             return;
@@ -2912,6 +2940,11 @@ impl HeadlessServer {
             }
             api::schema::Method::ClientWindowTitleClear(_) => {
                 let response = self.handle_client_window_title_api(msg.request.id.clone(), None);
+                let _ = msg.respond_to.send(response);
+                return true;
+            }
+            api::schema::Method::ClientSidebarToggle(_) => {
+                let response = self.handle_client_sidebar_toggle_api(msg.request.id.clone());
                 let _ = msg.respond_to.send(response);
                 return true;
             }

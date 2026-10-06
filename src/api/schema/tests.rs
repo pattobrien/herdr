@@ -373,6 +373,30 @@ fn client_window_title_requests_round_trip() {
 }
 
 #[test]
+fn client_sidebar_toggle_request_round_trips() {
+    let toggle = Request {
+        id: "req_sidebar".into(),
+        method: Method::ClientSidebarToggle(EmptyParams::default()),
+    };
+    let json = serde_json::to_value(&toggle).unwrap();
+    assert_eq!(json["method"], "client.sidebar.toggle");
+    let restored: Request = serde_json::from_value(json).unwrap();
+    assert_eq!(restored, toggle);
+
+    let response = SuccessResponse {
+        id: "req_sidebar".into(),
+        result: ResponseResult::ClientSidebarToggle {
+            changed: true,
+            reason: ClientSidebarToggleReason::Toggled,
+        },
+    };
+    let json = serde_json::to_value(&response).unwrap();
+    assert_eq!(json["result"]["type"], "client_sidebar_toggle");
+    assert_eq!(json["result"]["changed"], true);
+    assert_eq!(json["result"]["reason"], "toggled");
+}
+
+#[test]
 fn agent_view_requests_round_trip() {
     let set_json = serde_json::json!({
         "id": "view-set",

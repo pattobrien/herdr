@@ -572,6 +572,49 @@ fn api_window_title_wins_until_it_is_cleared() {
     shutdown_test_runtimes(&mut server);
 }
 
+fn next_endpoint_control(
+    control_rx: &std::sync::mpsc::Receiver<Vec<u8>>,
+) -> Option<(String, String)> {
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while let Some(remaining) = deadline.checked_duration_since(Instant::now()) {
+        let Ok(bytes) = control_rx.recv_timeout(remaining) else {
+            return None;
+        };
+        if let ServerMessage::EndpointControl { kind, data } = read_server_message(bytes) {
+            return Some((kind, data));
+        }
+    }
+    None
+}
+
+#[test]
+fn sidebar_toggle_api_reaches_the_foreground_client() {
+    let (mut server, control_rx) = window_title_test_server();
+
+    let response = server.handle_client_sidebar_toggle_api("toggle".into());
+    let response: serde_json::Value = serde_json::from_str(&response).unwrap();
+    assert_eq!(response["id"], "toggle");
+    assert_eq!(response["result"]["type"], "client_sidebar_toggle");
+    assert_eq!(response["result"]["changed"], true);
+    assert_eq!(response["result"]["reason"], "toggled");
+
+    let (kind, _) = next_endpoint_control(&control_rx).expect("sidebar toggle control");
+    assert_eq!(kind, crate::protocol::endpoint::SIDEBAR_TOGGLE_KIND);
+    shutdown_test_runtimes(&mut server);
+}
+
+#[test]
+fn sidebar_toggle_api_reports_no_foreground_client() {
+    let mut server = test_headless_server();
+
+    let response = server.handle_client_sidebar_toggle_api("toggle".into());
+    let response: serde_json::Value = serde_json::from_str(&response).unwrap();
+    assert_eq!(response["result"]["type"], "client_sidebar_toggle");
+    assert_eq!(response["result"]["changed"], false);
+    assert_eq!(response["result"]["reason"], "no_foreground_client");
+    shutdown_test_runtimes(&mut server);
+}
+
 #[test]
 fn clearing_the_api_title_falls_back_to_herdr_when_window_titles_are_disabled() {
     let (mut server, control_rx) = window_title_test_server();

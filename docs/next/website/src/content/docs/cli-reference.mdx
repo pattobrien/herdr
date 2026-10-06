@@ -374,6 +374,7 @@ herdr terminal session control <target> [--takeover] [--cols N] [--rows N]
 herdr terminal session observe <target> [--cols N] [--rows N]
 herdr terminal title set <title>
 herdr terminal title clear
+herdr terminal sidebar toggle
 ```
 
 Detach from direct attach with `ctrl+b q`. Send literal `ctrl+b` with `ctrl+b ctrl+b`.
@@ -401,6 +402,8 @@ On Linux and macOS, an observer is disconnected if a socket write makes no progr
 for 30 seconds. A stalled stream can end without a final `terminal.closed` record;
 the pane and other clients keep running. Quiet panes do not trigger this timeout.
 `terminal title clear` hands the outer terminal window title back to `ui.window_title`.
+`terminal sidebar toggle` collapses or expands the sidebar of the foreground attached
+client, the same as the `toggle_sidebar` keybinding.
 
 ## Output waits
 

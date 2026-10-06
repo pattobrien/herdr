@@ -523,3 +523,22 @@ fn close_confirmation_error_becomes_client_owned_overlay_and_stable_workspace_cl
             if params.workspace_id == "ws_1" && !params.close_group
     ));
 }
+
+#[test]
+fn toggle_sidebar_flips_the_collapsed_state_and_requests_a_resize() {
+    let mut state = ClientShellState::new(ClientShellConfig::from_config(&Config::default()));
+    assert!(!state.sidebar_collapsed);
+
+    let mut outcome = ClientShellInput::default();
+    state.toggle_sidebar(&mut outcome);
+    assert!(state.sidebar_collapsed);
+    assert!(state.sidebar_collapsed_manual);
+    assert!(state.reveal_navigation_workspace);
+    assert!(outcome.repaint);
+    assert!(outcome.resize);
+
+    let mut outcome = ClientShellInput::default();
+    state.toggle_sidebar(&mut outcome);
+    assert!(!state.sidebar_collapsed);
+    assert!(outcome.resize);
+}

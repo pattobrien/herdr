@@ -1058,6 +1058,15 @@ impl App {
                     },
                 );
             }
+            Method::ClientSidebarToggle(_) => {
+                return responses::encode_success(
+                    request.id,
+                    ResponseResult::ClientSidebarToggle {
+                        changed: false,
+                        reason: crate::api::schema::ClientSidebarToggleReason::NoForegroundClient,
+                    },
+                );
+            }
             Method::SessionSnapshot(_) => return self.handle_session_snapshot(request.id),
             Method::WorkspaceList(_) => return self.handle_workspace_list(request.id),
             Method::WorkspaceGet(target) => return self.handle_workspace_get(request.id, target),
@@ -1809,6 +1818,29 @@ mod tests {
         let clear: serde_json::Value = serde_json::from_str(&clear).unwrap();
         assert_eq!(clear["result"]["type"], "client_window_title");
         assert_eq!(clear["result"]["reason"], "no_foreground_client");
+    }
+
+    #[test]
+    fn client_sidebar_toggle_api_reports_no_foreground_client_in_app_mode() {
+        let (_api_tx, api_rx) = tokio::sync::mpsc::unbounded_channel();
+        let mut app = App::new(
+            &crate::config::Config::default(),
+            crate::app::AppPolicy::TEST,
+            None,
+            api_rx,
+            crate::api::EventHub::default(),
+        );
+
+        let response = app.handle_api_request(crate::api::schema::Request {
+            id: "sidebar_toggle".into(),
+            method: crate::api::schema::Method::ClientSidebarToggle(
+                crate::api::schema::EmptyParams::default(),
+            ),
+        });
+        let response: serde_json::Value = serde_json::from_str(&response).unwrap();
+        assert_eq!(response["result"]["type"], "client_sidebar_toggle");
+        assert_eq!(response["result"]["changed"], false);
+        assert_eq!(response["result"]["reason"], "no_foreground_client");
     }
 
     #[cfg(unix)]
