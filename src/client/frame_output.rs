@@ -71,7 +71,7 @@ pub(super) fn write_composed_frame(
                     let path = base64::engine::general_purpose::STANDARD.encode(path.as_bytes());
                     write!(writer, "\x1b_G{control};{path}\x1b\\")?;
                 } else {
-                    crate::kitty_graphics::write_kitty_data(&mut writer, control, data)?;
+                    crate::kitty_graphics::write_kitty_upload(&mut writer, control, data)?;
                 }
             }
         }
