@@ -22,6 +22,7 @@ pub(crate) struct ClientShellEndpoint {
     pending_agent_view_projection: Option<ClientEndpointAgentViewProjection>,
     pub(crate) agent_view_projection_supported: bool,
     pub(crate) methods: Option<HashSet<String>>,
+    pub(super) pane_pointer_shapes: HashMap<String, String>,
 }
 
 pub(super) struct MachineHit {
@@ -88,6 +89,9 @@ impl ClientShellState {
                 agent_view_projection_supported: previous
                     .is_some_and(|endpoint| endpoint.agent_view_projection_supported),
                 methods: previous.and_then(|endpoint| endpoint.methods.clone()),
+                pane_pointer_shapes: previous
+                    .map(|endpoint| endpoint.pane_pointer_shapes.clone())
+                    .unwrap_or_default(),
             });
         }
 
@@ -620,6 +624,9 @@ impl ClientShellState {
         });
         let endpoint = &mut self.endpoints[index];
         endpoint.agent_recency = recency;
+        endpoint
+            .pane_pointer_shapes
+            .retain(|pane_id, _| snapshot.panes.iter().any(|pane| &pane.pane_id == pane_id));
         endpoint.snapshot_generation = generation;
         endpoint.snapshot = Some(snapshot);
         let pending_matches =
@@ -742,5 +749,6 @@ pub(super) fn local_endpoint() -> ClientShellEndpoint {
         pending_agent_view_projection: None,
         agent_view_projection_supported: false,
         methods: None,
+        pane_pointer_shapes: HashMap::new(),
     }
 }

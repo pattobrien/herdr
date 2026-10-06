@@ -32,12 +32,20 @@ pub const AGENT_VIEW_PROJECTION_KIND: &str = "endpoint.agent-view.v1";
 pub const AGENT_COMPLETIONS_CAPABILITY: &str = "agent_completions";
 pub const AGENT_COMPLETIONS_KIND: &str = "endpoint.agent-completions.v1";
 pub const SIDEBAR_TOGGLE_KIND: &str = "endpoint.sidebar-toggle.v1";
+pub const PANE_POINTER_SHAPE_KIND: &str = "endpoint.pane-pointer-shape.v1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EndpointAgentCompletions {
     pub boot_id: String,
     pub revision: u64,
     pub completions: std::collections::BTreeMap<String, u64>,
+}
+
+/// Latest OSC 22 pointer shape of one pane; an empty shape is the host default.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EndpointPanePointerShape {
+    pub pane_id: String,
+    pub shape: String,
 }
 
 fn default_true() -> bool {
@@ -128,6 +136,15 @@ pub fn sidebar_toggle_message() -> ServerMessage {
         kind: SIDEBAR_TOGGLE_KIND.into(),
         data: "{}".into(),
     }
+}
+
+pub fn pane_pointer_shape_message(
+    shape: &EndpointPanePointerShape,
+) -> serde_json::Result<ServerMessage> {
+    Ok(ServerMessage::EndpointControl {
+        kind: PANE_POINTER_SHAPE_KIND.into(),
+        data: serde_json::to_string(shape)?,
+    })
 }
 
 pub fn agent_view_projection_message(
