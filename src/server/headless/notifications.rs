@@ -289,6 +289,90 @@ impl HeadlessServer {
         )
     }
 
+    fn pointer_shape_pane_id(&self, pane_id: crate::layout::PaneId) -> Option<String> {
+        if let Some(popup) = self
+            .app
+            .state
+            .popup_pane
+            .as_ref()
+            .filter(|popup| popup.pane_id == pane_id)
+        {
+            return Some(popup.terminal_id.to_string());
+        }
+        let (ws_idx, _) = self.app.find_pane(pane_id)?;
+        self.app.public_pane_id(ws_idx, pane_id)
+    }
+
+    fn forward_pane_pointer_shape(&mut self, pane_id: crate::layout::PaneId, shape: &str) {
+        let Some(public_pane_id) = self.pointer_shape_pane_id(pane_id) else {
+            debug!(
+                pane = pane_id.raw(),
+                "dropped pointer shape for an unknown pane"
+            );
+            return;
+        };
+        let update = protocol::endpoint::EndpointPanePointerShape {
+            pane_id: public_pane_id,
+            shape: shape.to_owned(),
+        };
+        match protocol::endpoint::pane_pointer_shape_message(&update) {
+            Ok(message) => {
+                self.send_to_client_shells(message);
+            }
+            Err(err) => warn!(err = %err, "failed to encode pane pointer shape"),
+        }
+    }
+
+    /// Sends every non-default pane pointer shape to a newly connected client shell.
+    pub(super) fn send_pane_pointer_shapes_to_client(&mut self, client_id: u64) {
+        let app = &self.app;
+        let mut updates =
+            app.state
+                .workspaces
+                .iter()
+                .enumerate()
+                .flat_map(|(ws_idx, workspace)| {
+                    workspace.tabs.iter().flat_map(move |tab| {
+                        tab.panes.keys().map(move |&pane_id| (ws_idx, pane_id))
+                    })
+                })
+                .filter_map(|(ws_idx, pane_id)| {
+                    let runtime = app.state.runtime_for_pane_in_workspace(
+                        &app.terminal_runtimes,
+                        ws_idx,
+                        pane_id,
+                    )?;
+                    let shape = runtime.pointer_shape();
+                    if shape.is_empty() {
+                        return None;
+                    }
+                    Some(protocol::endpoint::EndpointPanePointerShape {
+                        pane_id: app.public_pane_id(ws_idx, pane_id)?,
+                        shape,
+                    })
+                })
+                .collect::<Vec<_>>();
+        if let Some(popup) = app.state.popup_pane.as_ref() {
+            if let Some(runtime) = app.terminal_runtimes.get(&popup.terminal_id) {
+                let shape = runtime.pointer_shape();
+                if !shape.is_empty() {
+                    updates.push(protocol::endpoint::EndpointPanePointerShape {
+                        pane_id: popup.terminal_id.to_string(),
+                        shape,
+                    });
+                }
+            }
+        }
+        for update in updates {
+            match protocol::endpoint::pane_pointer_shape_message(&update) {
+                Ok(message) => {
+                    self.send_to_client(client_id, message);
+                }
+                Err(err) => warn!(client_id, err = %err, "failed to encode pane pointer shape"),
+            }
+        }
+    }
+
     /// Handles a single internal event with forwarding logic for clipboard,
     /// sound, and toast notifications to connected clients.
     ///
@@ -336,6 +420,10 @@ impl HeadlessServer {
                 // the foreground client instead of broadcasting to every attached client.
                 let data = base64::engine::general_purpose::STANDARD.encode(content.as_slice());
                 self.send_to_foreground_client(ServerMessage::Clipboard { data });
+                false
+            }
+            AppEvent::PanePointerShape { pane_id, shape } => {
+                self.forward_pane_pointer_shape(*pane_id, shape);
                 false
             }
             AppEvent::StateChanged { pane_id, agent, .. } => {

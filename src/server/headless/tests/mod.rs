@@ -6666,6 +6666,62 @@ fn terminal_bell_targets_foreground_client_only() {
     );
 }
 
+fn recv_pane_pointer_shape(
+    receiver: &std::sync::mpsc::Receiver<Vec<u8>>,
+) -> protocol::endpoint::EndpointPanePointerShape {
+    let ServerMessage::EndpointControl { kind, data } = read_server_message(
+        receiver
+            .recv_timeout(Duration::from_millis(100))
+            .expect("pane pointer shape message"),
+    ) else {
+        panic!("expected pane pointer shape control");
+    };
+    assert_eq!(kind, protocol::endpoint::PANE_POINTER_SHAPE_KIND);
+    serde_json::from_str(&data).expect("decode pane pointer shape")
+}
+
+#[tokio::test]
+async fn pane_pointer_shape_forwards_to_every_client_shell() {
+    let mut server = test_headless_server();
+    let pane_id = install_shared_view_test_runtime(&mut server);
+    let (first_control, _first_render) = connect_matching_test_shell(&mut server, 7);
+    let (second_control, _second_render) = connect_matching_test_shell(&mut server, 8);
+    let _ = client_shell_projection(&first_control);
+    let _ = client_shell_projection(&second_control);
+    let public_pane_id = server.app.public_pane_id(0, pane_id).unwrap();
+
+    let changed = server.handle_internal_event_with_forwarding(AppEvent::PanePointerShape {
+        pane_id,
+        shape: "pointer".into(),
+    });
+
+    assert!(!changed);
+    for control in [&first_control, &second_control] {
+        let update = recv_pane_pointer_shape(control);
+        assert_eq!(update.pane_id, public_pane_id);
+        assert_eq!(update.shape, "pointer");
+    }
+    shutdown_test_runtimes(&mut server);
+}
+
+#[tokio::test]
+async fn connecting_client_shell_receives_non_default_pane_pointer_shapes() {
+    let mut server = test_headless_server();
+    let pane_id = install_shared_view_test_runtime(&mut server);
+    write_shared_test_pane(&mut server, pane_id, b"\x1b]22;text\x1b\\");
+
+    let (control, _render) = connect_matching_test_shell(&mut server, 7);
+
+    let _ = client_shell_projection(&control);
+    let update = recv_pane_pointer_shape(&control);
+    assert_eq!(
+        update.pane_id,
+        server.app.public_pane_id(0, pane_id).unwrap()
+    );
+    assert_eq!(update.shape, "text");
+    shutdown_test_runtimes(&mut server);
+}
+
 #[test]
 fn clipboard_write_targets_foreground_client_only() {
     let mut server = test_headless_server();

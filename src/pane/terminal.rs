@@ -170,6 +170,8 @@ pub(crate) struct ProcessBytesResult {
     pub clipboard_writes: Vec<Vec<u8>>,
     pub reported_cwd: Option<std::path::PathBuf>,
     pub terminal_responses: Vec<Bytes>,
+    /// Set when the pane changed its OSC 22 pointer shape ("" = default).
+    pub pointer_shape: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -212,6 +214,7 @@ pub(crate) struct GhosttyPaneCore {
     pub child_default_foreground_changed: bool,
     pub child_default_background_changed: bool,
     pub osc_debug_tracker: OscDebugTracker,
+    pub pointer_shape_tracker: super::osc::PointerShapeOscTracker,
     pub agent_osc_state: AgentOscStateTracker,
     decscusr_tracker: DecscusrTracker,
     cursor_settle_state: CursorPositionSettleState,
@@ -465,6 +468,11 @@ impl PaneTerminal {
 
     pub fn wheel_routing(&self) -> Option<crate::pane::WheelRouting> {
         self.ghostty.wheel_routing()
+    }
+
+    /// The pane's current OSC 22 pointer shape ("" = host default).
+    pub fn pointer_shape(&self) -> String {
+        self.ghostty.pointer_shape()
     }
 
     pub(crate) fn screen_text_snapshot(
@@ -1195,6 +1203,7 @@ impl GhosttyPaneTerminal {
                 child_default_foreground_changed: false,
                 child_default_background_changed: false,
                 osc_debug_tracker: OscDebugTracker::default(),
+                pointer_shape_tracker: super::osc::PointerShapeOscTracker::default(),
                 agent_osc_state: AgentOscStateTracker::default(),
                 decscusr_tracker: DecscusrTracker::default(),
                 cursor_settle_state: CursorPositionSettleState::default(),
@@ -1363,6 +1372,7 @@ impl GhosttyPaneTerminal {
                 clipboard_writes: Vec::new(),
                 reported_cwd: None,
                 terminal_responses: Vec::new(),
+                pointer_shape: None,
             };
         };
 
@@ -1382,6 +1392,7 @@ impl GhosttyPaneTerminal {
             }
         }
 
+        let pointer_shape = core.pointer_shape_tracker.observe(bytes);
         core.osc_debug_tracker.observe(bytes);
         for event in core.osc_debug_tracker.drain_pending() {
             debug!(
@@ -1480,6 +1491,7 @@ impl GhosttyPaneTerminal {
             clipboard_writes,
             reported_cwd,
             terminal_responses,
+            pointer_shape,
         }
     }
 
@@ -1986,6 +1998,14 @@ impl GhosttyPaneTerminal {
         } else {
             crate::pane::WheelRouting::HostScroll
         })
+    }
+
+    /// The pane's current OSC 22 pointer shape ("" = host default).
+    pub fn pointer_shape(&self) -> String {
+        self.core
+            .lock()
+            .map(|core| core.pointer_shape_tracker.current().to_owned())
+            .unwrap_or_default()
     }
 
     pub fn cursor_state(&self) -> Option<TerminalCursorState> {
@@ -5070,6 +5090,26 @@ mod tests {
             crossterm::event::KeyModifiers::empty(),
         );
         assert_eq!(encoded.as_deref(), Some(&b"\x1b[<64;12;10M"[..]));
+    }
+
+    #[test]
+    fn process_pty_bytes_surfaces_pointer_shape_changes() {
+        let (tx, _rx) = mpsc::channel(4);
+        let terminal = crate::ghostty::Terminal::new(80, 24, 0).unwrap();
+        let pane = GhosttyPaneTerminal::new(terminal, tx.clone()).unwrap();
+        let pane_id = PaneId::from_raw(1);
+
+        let result = pane.process_pty_bytes(pane_id, 0, b"\x1b]22;pointer\x1b\\", &tx);
+        assert_eq!(result.pointer_shape.as_deref(), Some("pointer"));
+        assert_eq!(pane.pointer_shape(), "pointer");
+
+        // Unchanged shape and unrelated output surface nothing.
+        let result = pane.process_pty_bytes(pane_id, 0, b"hello \x1b]22;pointer\x07", &tx);
+        assert_eq!(result.pointer_shape, None);
+
+        let result = pane.process_pty_bytes(pane_id, 0, b"\x1b]22;\x07", &tx);
+        assert_eq!(result.pointer_shape.as_deref(), Some(""));
+        assert_eq!(pane.pointer_shape(), "");
     }
 
     #[test]

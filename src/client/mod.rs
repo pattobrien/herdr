@@ -732,7 +732,7 @@ async fn run_client_loop(
                         }
                     }
                 }
-                apply_client_shell_input_source_changes(&mut state, &mut prefix_input_source);
+                apply_client_shell_host_effects(&mut state, &mut prefix_input_source);
                 if let Some(shell) = state.shell.as_mut() {
                     let cleanup = shell.take_pending_graphics_cleanup();
                     let frame = shell.compose(state.reported_size.0, state.reported_size.1);
@@ -1509,10 +1509,7 @@ async fn run_client_loop(
                         } else {
                             None
                         };
-                        apply_client_shell_input_source_changes(
-                            &mut state,
-                            &mut prefix_input_source,
-                        );
+                        apply_client_shell_host_effects(&mut state, &mut prefix_input_source);
                         if let Some(frame) = composed {
                             state.present_frame(frame);
                         }
@@ -1542,10 +1539,7 @@ async fn run_client_loop(
                             Some(shell::ClientPaneSurfacePatchOutcome::Applied(None)) => true,
                             Some(shell::ClientPaneSurfacePatchOutcome::Rejected) | None => false,
                         };
-                        apply_client_shell_input_source_changes(
-                            &mut state,
-                            &mut prefix_input_source,
-                        );
+                        apply_client_shell_host_effects(&mut state, &mut prefix_input_source);
                         if compose_fallback {
                             let composed = state.shell.as_mut().and_then(|shell| {
                                 shell.compose(state.reported_size.0, state.reported_size.1)
@@ -1896,10 +1890,7 @@ async fn run_client_loop(
                         if let Some(shell) = state.shell.as_mut() {
                             shell.reconcile_input_source();
                         }
-                        apply_client_shell_input_source_changes(
-                            &mut state,
-                            &mut prefix_input_source,
-                        );
+                        apply_client_shell_host_effects(&mut state, &mut prefix_input_source);
                         let (replay_mouse, dispatch_repaint) = dispatch_client_shell_actions(
                             actions,
                             &mut endpoint_commands,
@@ -2094,6 +2085,13 @@ async fn run_client_loop(
                                 )? {
                                     return Ok(());
                                 }
+                                continue;
+                            }
+                            Ok(endpoint::EndpointControlMessage::PanePointerShape(update)) => {
+                                if let Some(shell) = state.shell.as_mut() {
+                                    shell.set_endpoint_pane_pointer_shape(&endpoint_id, update);
+                                }
+                                apply_client_shell_host_pointer_shape(&mut state);
                                 continue;
                             }
                             Ok(endpoint::EndpointControlMessage::Ignored) => {

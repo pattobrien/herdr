@@ -11,6 +11,7 @@ pub(crate) enum EndpointControlMessage {
     AgentViewProjection(DecodedAgentViewProjection),
     AgentCompletions(crate::protocol::endpoint::EndpointAgentCompletions),
     SidebarToggle,
+    PanePointerShape(crate::protocol::endpoint::EndpointPanePointerShape),
     Snapshot(Box<crate::protocol::ClientShellSnapshot>),
     Ignored,
 }
@@ -29,6 +30,11 @@ pub(crate) fn decode_endpoint_control(
     }
     if kind == crate::protocol::endpoint::SIDEBAR_TOGGLE_KIND {
         return Ok(EndpointControlMessage::SidebarToggle);
+    }
+    if kind == crate::protocol::endpoint::PANE_POINTER_SHAPE_KIND {
+        return Ok(serde_json::from_str(data)
+            .map(EndpointControlMessage::PanePointerShape)
+            .unwrap_or(EndpointControlMessage::Ignored));
     }
     if kind == crate::protocol::endpoint::AGENT_VIEW_PROJECTION_KIND {
         let Ok(projection): Result<crate::protocol::endpoint::EndpointAgentViewProjection, _> =
@@ -122,6 +128,29 @@ mod tests {
         assert!(matches!(
             decode_endpoint_control(&kind, &data).unwrap(),
             EndpointControlMessage::SidebarToggle
+        ));
+    }
+
+    #[test]
+    fn pane_pointer_shape_optional_control_round_trips() {
+        let shape = crate::protocol::endpoint::EndpointPanePointerShape {
+            pane_id: "pane".into(),
+            shape: "pointer".into(),
+        };
+        let crate::protocol::ServerMessage::EndpointControl { kind, data } =
+            crate::protocol::endpoint::pane_pointer_shape_message(&shape).unwrap()
+        else {
+            panic!("expected optional control");
+        };
+        let EndpointControlMessage::PanePointerShape(decoded) =
+            decode_endpoint_control(&kind, &data).unwrap()
+        else {
+            panic!("expected pane pointer shape");
+        };
+        assert_eq!(decoded, shape);
+        assert!(matches!(
+            decode_endpoint_control(&kind, "invalid").unwrap(),
+            EndpointControlMessage::Ignored
         ));
     }
 

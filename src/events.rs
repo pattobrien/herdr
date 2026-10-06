@@ -179,6 +179,9 @@ pub enum AppEvent {
     /// A pane child emitted a valid OSC 52 clipboard write. The main loop
     /// re-emits it through herdr's own clipboard writer.
     ClipboardWrite { content: Vec<u8> },
+    /// A pane changed its OSC 22 pointer shape ("" = host default). The host
+    /// cursor mirrors it while the pane is hovered.
+    PanePointerShape { pane_id: PaneId, shape: String },
     /// A pane child reported its shell current directory through terminal
     /// metadata such as OSC 7.
     TerminalCwdReported {
