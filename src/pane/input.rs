@@ -61,7 +61,7 @@ pub(super) fn ghostty_mods_from_key_modifiers(modifiers: crossterm::event::KeyMo
 pub(super) fn ghostty_mouse_encoder_for_terminal(
     terminal: &crate::ghostty::Terminal,
     position: crate::input::mouse::Position,
-) -> Option<crate::ghostty::MouseEncoder> {
+) -> Option<(crate::ghostty::MouseEncoder, (f32, f32))> {
     let mut encoder = crate::ghostty::MouseEncoder::new().ok()?;
     encoder.set_from_terminal(terminal);
     let cols = terminal.cols().ok()? as u32;
@@ -69,34 +69,39 @@ pub(super) fn ghostty_mouse_encoder_for_terminal(
     let sgr_pixels = terminal
         .mode_get(crate::ghostty::MODE_MOUSE_SGR_PIXELS)
         .ok()?;
+    let width_px = terminal.width_px().ok()?;
+    let height_px = terminal.height_px().ok()?;
+    let has_pixels = width_px != 0 && height_px != 0 && cols != 0 && rows != 0;
     match position {
-        crate::input::mouse::Position::Cell { .. } => {
+        crate::input::mouse::Position::Cell { column, row } => {
+            if sgr_pixels && has_pixels {
+                let cell_w = width_px / cols;
+                let cell_h = height_px / rows;
+                encoder.set_size(width_px, height_px, cell_w, cell_h);
+                return Some((
+                    encoder,
+                    (
+                        (column as f32 + 0.5) * cell_w as f32,
+                        (row as f32 + 0.5) * cell_h as f32,
+                    ),
+                ));
+            }
             if sgr_pixels {
                 encoder.set_format(crate::ghostty::MOUSE_FORMAT_SGR);
             }
             encoder.set_size(cols, rows, 1, 1);
+            Some((encoder, (column as f32, row as f32)))
         }
-        crate::input::mouse::Position::Pixels { .. } => {
+        crate::input::mouse::Position::Pixels { x, y } => {
             if sgr_pixels {
                 encoder.set_format(crate::ghostty::MOUSE_FORMAT_SGR_PIXELS);
             }
-            let width_px = terminal.width_px().ok()?;
-            let height_px = terminal.height_px().ok()?;
-            if width_px == 0 || height_px == 0 || cols == 0 || rows == 0 {
+            if !has_pixels {
                 return None;
             }
             encoder.set_size(width_px, height_px, width_px / cols, height_px / rows);
+            Some((encoder, (x as f32, y as f32)))
         }
-    }
-    Some(encoder)
-}
-
-pub(super) fn ghostty_mouse_position_for_terminal(
-    position: crate::input::mouse::Position,
-) -> Option<(f32, f32)> {
-    match position {
-        crate::input::mouse::Position::Pixels { x, y } => Some((x as f32, y as f32)),
-        crate::input::mouse::Position::Cell { column, row } => Some((column as f32, row as f32)),
     }
 }
 
