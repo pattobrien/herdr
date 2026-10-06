@@ -1,6 +1,16 @@
 use super::*;
 
 impl ClientShellState {
+    pub(crate) fn toggle_sidebar(&mut self, outcome: &mut ClientShellInput) {
+        self.sidebar_collapsed = !self.sidebar_collapsed;
+        self.sidebar_collapsed_manual = true;
+        self.reveal_navigation_workspace = true;
+        self.invalidate_pane_surface();
+        outcome.repaint = true;
+        outcome.resize = true;
+        self.persist_chrome_preferences(outcome);
+    }
+
     pub(super) fn record_binding(
         &mut self,
         binding: crate::input::KeybindMatch,
@@ -11,13 +21,7 @@ impl ClientShellState {
                 outcome.detach = true;
             }
             crate::input::KeybindMatch::Action(crate::input::KeybindAction::ToggleSidebar) => {
-                self.sidebar_collapsed = !self.sidebar_collapsed;
-                self.sidebar_collapsed_manual = true;
-                self.reveal_navigation_workspace = true;
-                self.invalidate_pane_surface();
-                outcome.repaint = true;
-                outcome.resize = true;
-                self.persist_chrome_preferences(outcome);
+                self.toggle_sidebar(outcome);
             }
             crate::input::KeybindMatch::Action(action) => {
                 if self.workspace_preview_action_blocked()

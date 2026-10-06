@@ -411,6 +411,7 @@ fn run_terminal_command(args: &[String]) -> std::io::Result<i32> {
         "attach" => terminal_attach(&args[1..]),
         "session" => terminal_session(&args[1..]),
         "title" => terminal_title(&args[1..]),
+        "sidebar" => terminal_sidebar(&args[1..]),
         "help" | "--help" | "-h" => {
             print_terminal_help();
             Ok(0)
@@ -715,6 +716,29 @@ fn terminal_title(args: &[String]) -> std::io::Result<i32> {
         _ => {
             eprintln!("usage: herdr terminal title set <title>");
             eprintln!("       herdr terminal title clear");
+            Ok(2)
+        }
+    }
+}
+
+fn terminal_sidebar(args: &[String]) -> std::io::Result<i32> {
+    match args.first().map(|arg| arg.as_str()) {
+        Some("toggle") => {
+            if args.len() != 1 {
+                eprintln!("usage: herdr terminal sidebar toggle");
+                return Ok(2);
+            }
+            print_response(&send_request(&Request {
+                id: "cli:terminal:sidebar:toggle".into(),
+                method: Method::ClientSidebarToggle(EmptyParams::default()),
+            })?)
+        }
+        Some("help" | "--help" | "-h") => {
+            eprintln!("usage: herdr terminal sidebar toggle");
+            Ok(0)
+        }
+        _ => {
+            eprintln!("usage: herdr terminal sidebar toggle");
             Ok(2)
         }
     }
@@ -1040,6 +1064,7 @@ fn print_terminal_help() {
     eprintln!("  herdr terminal session observe <target> [--cols N] [--rows N]");
     eprintln!("  herdr terminal title set <title>");
     eprintln!("  herdr terminal title clear");
+    eprintln!("  herdr terminal sidebar toggle");
     eprintln!("  detach from direct attach with ctrl+b q; send literal ctrl+b with ctrl+b ctrl+b");
 }
 

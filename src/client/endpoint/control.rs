@@ -10,6 +10,7 @@ pub(crate) enum EndpointControlMessage {
     HealthPong,
     AgentViewProjection(DecodedAgentViewProjection),
     AgentCompletions(crate::protocol::endpoint::EndpointAgentCompletions),
+    SidebarToggle,
     Snapshot(Box<crate::protocol::ClientShellSnapshot>),
     Ignored,
 }
@@ -25,6 +26,9 @@ pub(crate) fn decode_endpoint_control(
         return Ok(serde_json::from_str(data)
             .map(EndpointControlMessage::AgentCompletions)
             .unwrap_or(EndpointControlMessage::Ignored));
+    }
+    if kind == crate::protocol::endpoint::SIDEBAR_TOGGLE_KIND {
+        return Ok(EndpointControlMessage::SidebarToggle);
     }
     if kind == crate::protocol::endpoint::AGENT_VIEW_PROJECTION_KIND {
         let Ok(projection): Result<crate::protocol::endpoint::EndpointAgentViewProjection, _> =
@@ -104,6 +108,20 @@ mod tests {
         assert!(matches!(
             decode_endpoint_control(&kind, "invalid").unwrap(),
             EndpointControlMessage::Ignored
+        ));
+    }
+
+    #[test]
+    fn sidebar_toggle_optional_control_round_trips() {
+        let crate::protocol::ServerMessage::EndpointControl { kind, data } =
+            crate::protocol::endpoint::sidebar_toggle_message()
+        else {
+            panic!("expected optional control");
+        };
+        assert_eq!(kind, crate::protocol::endpoint::SIDEBAR_TOGGLE_KIND);
+        assert!(matches!(
+            decode_endpoint_control(&kind, &data).unwrap(),
+            EndpointControlMessage::SidebarToggle
         ));
     }
 

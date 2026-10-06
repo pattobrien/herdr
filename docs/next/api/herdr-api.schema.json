@@ -4892,6 +4892,22 @@
         {
           "properties": {
             "method": {
+              "const": "client.sidebar.toggle",
+              "type": "string"
+            },
+            "params": {
+              "$ref": "#/schemas/request/$defs/EmptyParams"
+            }
+          },
+          "required": [
+            "method",
+            "params"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "method": {
               "const": "client_shell.surface.set",
               "type": "string"
             },
@@ -6773,6 +6789,13 @@
             "blocked",
             "done",
             "unknown"
+          ],
+          "type": "string"
+        },
+        "ClientSidebarToggleReason": {
+          "enum": [
+            "toggled",
+            "no_foreground_client"
           ],
           "type": "string"
         },
@@ -9999,6 +10022,26 @@
                 },
                 "type": {
                   "const": "client_window_title",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "changed",
+                "reason"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "changed": {
+                  "type": "boolean"
+                },
+                "reason": {
+                  "$ref": "#/schemas/success_response/$defs/ClientSidebarToggleReason"
+                },
+                "type": {
+                  "const": "client_sidebar_toggle",
                   "type": "string"
                 }
               },

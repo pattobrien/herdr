@@ -31,6 +31,7 @@ pub const AGENT_VIEW_PROJECTION_CAPABILITY: &str = "agent_view_projection";
 pub const AGENT_VIEW_PROJECTION_KIND: &str = "endpoint.agent-view.v1";
 pub const AGENT_COMPLETIONS_CAPABILITY: &str = "agent_completions";
 pub const AGENT_COMPLETIONS_KIND: &str = "endpoint.agent-completions.v1";
+pub const SIDEBAR_TOGGLE_KIND: &str = "endpoint.sidebar-toggle.v1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct EndpointAgentCompletions {
@@ -120,6 +121,13 @@ pub fn agent_completions_message(
         kind: AGENT_COMPLETIONS_KIND.into(),
         data: serde_json::to_string(projection)?,
     })
+}
+
+pub fn sidebar_toggle_message() -> ServerMessage {
+    ServerMessage::EndpointControl {
+        kind: SIDEBAR_TOGGLE_KIND.into(),
+        data: "{}".into(),
+    }
 }
 
 pub fn agent_view_projection_message(
