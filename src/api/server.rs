@@ -16,10 +16,12 @@ use crate::api::schema::{
 use crate::api::subscriptions::ActiveSubscription;
 use crate::api::wait::{prompt_agent, wait_for_agent, wait_for_event, wait_for_output};
 use crate::api::{request_changes_ui, socket_path, ApiRequestMessage, ApiRequestSender, EventHub};
+#[cfg(unix)]
+use crate::ipc::set_local_stream_polling;
 use crate::ipc::{
     bind_local_listener, is_connection_closed_error, local_stream_peer_closed,
-    poll_local_stream_read, remove_socket_file_if_owned, set_local_stream_polling,
-    socket_file_identity, LocalStream, LocalStreamRead, SocketFileIdentity,
+    poll_local_stream_read, remove_socket_file_if_owned, socket_file_identity, LocalStream,
+    LocalStreamRead, SocketFileIdentity,
 };
 use crate::server::shutdown::{ServerStop, ShutdownReason};
 
@@ -1327,7 +1329,7 @@ mod tests {
         let elapsed = started.elapsed();
         let _client = writer.join().unwrap();
         assert_eq!(line.as_deref(), Some("{\"id\":\"1\"}\n"));
-        assert!(elapsed < Duration::from_millis(60), "took {elapsed:?}");
+        assert!(elapsed < CONNECTION_POLL_INTERVAL, "took {elapsed:?}");
         let mut rest = [0u8; 5];
         server.read_exact(&mut rest).unwrap();
         assert_eq!(&rest, b"extra", "bytes after the newline stay unread");
