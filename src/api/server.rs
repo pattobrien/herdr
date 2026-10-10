@@ -1327,7 +1327,7 @@ mod tests {
         let elapsed = started.elapsed();
         let _client = writer.join().unwrap();
         assert_eq!(line.as_deref(), Some("{\"id\":\"1\"}\n"));
-        assert!(elapsed < Duration::from_millis(60), "took {elapsed:?}");
+        assert!(elapsed < CONNECTION_POLL_INTERVAL, "took {elapsed:?}");
         let mut rest = [0u8; 5];
         server.read_exact(&mut rest).unwrap();
         assert_eq!(&rest, b"extra", "bytes after the newline stay unread");
