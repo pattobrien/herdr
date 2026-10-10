@@ -82,7 +82,15 @@ Add the upstream remote once with `git remote add upstream https://github.com/he
    Give the merge commit a conventional subject such as
    `chore: merge herdrdev/herdr master into fork master`; CI rejects anything else.
 
-3. Open a PR into `master`.
+3. Open a PR into `master` and merge it with a merge commit whose subject is conventional, for
+   example:
+
+   ```sh
+   gh pr merge <n> --merge --subject "chore: merge herdrdev/herdr master into fork master (#<n>)"
+   ```
+
+   CI validates every commit subject pushed to `master`, and GitHub's default
+   `Merge pull request` subject fails it.
 
 Never rebase or force-push `master` or any pushed branch.
 
