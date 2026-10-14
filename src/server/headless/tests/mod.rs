@@ -3210,6 +3210,40 @@ async fn client_shell_popup_cursor_waits_for_child_output() {
 }
 
 #[tokio::test]
+async fn client_shell_overlay_cursor_waits_for_child_output() {
+    let mut server = test_headless_server();
+    let _pane_input = install_focused_test_runtime(&mut server, b"base-pane");
+    let base_pane = server.app.state.workspaces[0].tabs[0].root_pane;
+    let overlay_pane = server.app.install_test_overlay_runtime(
+        crate::terminal::TerminalRuntime::test_with_screen_bytes(80, 23, b""),
+    );
+    let (_control_rx, render_rx) = connect_matching_test_shell(&mut server, 12);
+    let committed_cursor = |server: &HeadlessServer| {
+        server.clients[&12]
+            .render_state
+            .last_pane_surface()
+            .expect("committed surface")
+            .frame
+            .cursor
+            .as_ref()
+            .map(|cursor| (cursor.x, cursor.y, cursor.visible))
+    };
+
+    server.render_and_stream();
+    let surface = recv_pane_surface(&render_rx, "overlay surface before child output");
+    assert_eq!(surface.frame.cursor, None);
+
+    write_shared_test_pane(&mut server, base_pane, b"\rbase-output");
+    assert!(server.render_retained_pane_surface_and_stream(&HashSet::from([base_pane])));
+    assert_eq!(committed_cursor(&server), None);
+
+    write_shared_test_pane(&mut server, overlay_pane, b"$ ");
+    assert!(server.render_retained_pane_surface_and_stream(&HashSet::from([overlay_pane])));
+    assert_eq!(committed_cursor(&server), Some((3, 1, true)));
+    shutdown_test_runtimes(&mut server);
+}
+
+#[tokio::test]
 async fn terminal_popup_is_visible_and_modal_only_on_its_owning_tab() {
     let mut server = test_headless_server();
     let mut workspace = crate::workspace::Workspace::test_new("tab-popup");

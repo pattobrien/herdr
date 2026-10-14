@@ -523,6 +523,47 @@ impl App {
         self.state.mode = Mode::Terminal;
         Ok((ws_idx, new_pane))
     }
+
+    pub(crate) fn overlay_awaits_child_output(
+        &self,
+        ws_idx: usize,
+        pane_id: crate::layout::PaneId,
+    ) -> bool {
+        self.overlay_panes.contains_key(&pane_id)
+            && self
+                .state
+                .runtime_for_pane_in_workspace(&self.terminal_runtimes, ws_idx, pane_id)
+                .is_some_and(|runtime| !runtime.has_child_output())
+    }
+}
+
+#[cfg(test)]
+impl App {
+    pub(crate) fn install_test_overlay_runtime(
+        &mut self,
+        runtime: crate::terminal::TerminalRuntime,
+    ) -> crate::layout::PaneId {
+        let ws_idx = self.state.active.expect("active workspace");
+        let ws = &mut self.state.workspaces[ws_idx];
+        let tab_idx = ws.active_tab_index();
+        let previous_focus = ws.focused_pane_id().expect("focused pane");
+        let pane_id = ws.test_split(Direction::Horizontal);
+        ws.insert_test_runtime(pane_id, runtime);
+        let tab = ws.active_tab_mut().expect("active tab");
+        tab.layout.focus_pane(pane_id);
+        tab.zoomed = true;
+        self.overlay_panes.insert(
+            pane_id,
+            super::OverlayPaneState {
+                ws_idx,
+                tab_idx,
+                previous_focus,
+                previous_zoomed: false,
+                temp_files: Vec::new(),
+            },
+        );
+        pane_id
+    }
 }
 
 fn write_scrollback_temp_file(content: &str) -> io::Result<std::path::PathBuf> {

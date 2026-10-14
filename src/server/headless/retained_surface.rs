@@ -154,7 +154,9 @@ fn retained_cursor(
 ) -> Option<protocol::CursorState> {
     let pane = panes.iter().find(|pane| pane.focused)?;
     let (workspace_index, pane_id) = app.parse_pane_id(&pane.pane_id)?;
-    if !app.state.pane_exposes_host_cursor(workspace_index, pane_id) {
+    if !app.state.pane_exposes_host_cursor(workspace_index, pane_id)
+        || app.overlay_awaits_child_output(workspace_index, pane_id)
+    {
         return None;
     }
     let runtime = app.state.runtime_for_pane_in_workspace(

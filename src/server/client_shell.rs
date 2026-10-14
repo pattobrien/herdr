@@ -341,6 +341,13 @@ pub(super) fn render_pane_surface(
             layout,
             area,
         );
+    let cursor = cursor.filter(|_| {
+        !target.is_some_and(|target| {
+            layout.pane_infos.iter().any(|pane| {
+                pane.is_focused && app.overlay_awaits_child_output(target.workspace_index, pane.id)
+            })
+        })
+    });
     let panes = target
         .map(|target| {
             let workspace_index = target.workspace_index;
