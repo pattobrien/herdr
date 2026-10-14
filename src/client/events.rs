@@ -25,6 +25,7 @@ pub(super) enum ClientLoopEvent {
     },
     EndpointSupervisor(endpoint::EndpointSupervisorEvent),
     EndpointCatalog(Result<Vec<endpoint::SavedSshEndpoint>, String>),
+    HostPower(crate::platform::HostPowerEvent),
     ActivateEndpoint {
         endpoint_id: endpoint::ClientEndpointId,
         target: Option<shell::ClientEndpointFocusTarget>,
@@ -40,12 +41,14 @@ pub(super) enum ClientLoopEvent {
 #[cfg(unix)]
 pub(super) async fn next_loop_event(
     timer_deadline: std::time::Instant,
+    power_monitor: &mut crate::platform::HostPowerMonitor,
     supervisor_rx: &mut tokio::sync::mpsc::Receiver<endpoint::EndpointSupervisorEvent>,
     event_rx: &mut tokio::sync::mpsc::Receiver<ClientLoopEvent>,
     server_rx: &mut tokio::sync::mpsc::Receiver<ClientLoopEvent>,
 ) -> ClientLoopEvent {
     tokio::select! {
         biased;
+        ev = power_monitor.recv() => ClientLoopEvent::HostPower(ev),
         _ = tokio::time::sleep_until(timer_deadline.into()) => ClientLoopEvent::Timer,
         ev = supervisor_rx.recv() => ev.map(ClientLoopEvent::EndpointSupervisor).unwrap_or(ClientLoopEvent::Timer),
         ev = event_rx.recv() => ev.unwrap_or(ClientLoopEvent::Timer),
@@ -70,6 +73,7 @@ mod tests {
         let (_supervisor_tx, mut supervisor_rx) = tokio::sync::mpsc::channel(1);
         let (event_tx, mut event_rx) = tokio::sync::mpsc::channel(4);
         let (server_tx, mut server_rx) = tokio::sync::mpsc::channel(2);
+        let mut power_monitor = crate::platform::HostPowerMonitor::start(false);
         server_tx.try_send(server_message()).unwrap();
         server_tx.try_send(server_message()).unwrap();
         assert!(server_tx.try_send(server_message()).is_err());
@@ -78,14 +82,32 @@ mod tests {
             .unwrap();
         let deadline = std::time::Instant::now() + Duration::from_secs(60);
 
-        let first = next_loop_event(deadline, &mut supervisor_rx, &mut event_rx, &mut server_rx);
+        let first = next_loop_event(
+            deadline,
+            &mut power_monitor,
+            &mut supervisor_rx,
+            &mut event_rx,
+            &mut server_rx,
+        );
         assert!(matches!(first.await, ClientLoopEvent::StdinInput(_)));
-        let second = next_loop_event(deadline, &mut supervisor_rx, &mut event_rx, &mut server_rx);
+        let second = next_loop_event(
+            deadline,
+            &mut power_monitor,
+            &mut supervisor_rx,
+            &mut event_rx,
+            &mut server_rx,
+        );
         assert!(matches!(
             second.await,
             ClientLoopEvent::ServerMessage { generation: 1, .. }
         ));
-        let third = next_loop_event(deadline, &mut supervisor_rx, &mut event_rx, &mut server_rx);
+        let third = next_loop_event(
+            deadline,
+            &mut power_monitor,
+            &mut supervisor_rx,
+            &mut event_rx,
+            &mut server_rx,
+        );
         assert!(matches!(
             third.await,
             ClientLoopEvent::ServerMessage { generation: 1, .. }
