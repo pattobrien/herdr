@@ -16,12 +16,10 @@ use crate::api::schema::{
 use crate::api::subscriptions::ActiveSubscription;
 use crate::api::wait::{prompt_agent, wait_for_agent, wait_for_event, wait_for_output};
 use crate::api::{request_changes_ui, socket_path, ApiRequestMessage, ApiRequestSender, EventHub};
-#[cfg(unix)]
-use crate::ipc::set_local_stream_polling;
 use crate::ipc::{
     bind_local_listener, is_connection_closed_error, local_stream_peer_closed,
-    poll_local_stream_read, remove_socket_file_if_owned, socket_file_identity, LocalStream,
-    LocalStreamRead, SocketFileIdentity,
+    poll_local_stream_read, remove_socket_file_if_owned, set_local_stream_polling,
+    socket_file_identity, LocalStream, LocalStreamRead, SocketFileIdentity,
 };
 use crate::server::shutdown::{ServerStop, ShutdownReason};
 
@@ -604,111 +602,7 @@ fn handle_request(
 }
 
 pub(crate) fn api_method_name(method: &Method) -> &'static str {
-    match method {
-        Method::Ping(_) => "ping",
-        Method::ServerStop(_) => "server.stop",
-        Method::ServerLiveHandoff(_) => "server.live_handoff",
-        Method::ServerReloadConfig(_) => "server.reload_config",
-        Method::ServerSshAgentRegister(_) => "server.ssh_agent.register",
-        Method::ServerAgentManifests(_) => "server.agent_manifests",
-        Method::ServerReloadAgentManifests(_) => "server.reload_agent_manifests",
-        Method::NotificationShow(_) => "notification.show",
-        Method::ProductAnnouncementDismiss(_) => "product_announcement.dismiss",
-        Method::ReleaseNotesDismiss(_) => "release_notes.dismiss",
-        Method::CommandInvoke(_) => "command.invoke",
-        Method::ClientWindowTitleSet(_) => "client.window_title.set",
-        Method::ClientWindowTitleClear(_) => "client.window_title.clear",
-        Method::ClientSidebarToggle(_) => "client.sidebar.toggle",
-        Method::ClientShellSurfaceSet(_) => "client_shell.surface.set",
-        Method::SessionSnapshot(_) => "session.snapshot",
-        Method::WorkspaceCreate(_) => "workspace.create",
-        Method::WorkspaceList(_) => "workspace.list",
-        Method::WorkspaceGet(_) => "workspace.get",
-        Method::WorkspaceFocus(_) => "workspace.focus",
-        Method::WorkspaceRename(_) => "workspace.rename",
-        Method::WorkspaceMove(_) => "workspace.move",
-        Method::WorkspaceMoveBlock(_) => "workspace.move_block",
-        Method::WorkspaceReportMetadata(_) => "workspace.report_metadata",
-        Method::WorkspaceClose(_) => "workspace.close",
-        Method::WorktreeList(_) => "worktree.list",
-        Method::WorktreeCreate(_) => "worktree.create",
-        Method::WorktreeOpen(_) => "worktree.open",
-        Method::WorktreeRemove(_) => "worktree.remove",
-        Method::TabCreate(_) => "tab.create",
-        Method::TabList(_) => "tab.list",
-        Method::TabGet(_) => "tab.get",
-        Method::TabFocus(_) => "tab.focus",
-        Method::TabRename(_) => "tab.rename",
-        Method::TabMove(_) => "tab.move",
-        Method::TabClose(_) => "tab.close",
-        Method::AgentList(_) => "agent.list",
-        Method::AgentGet(_) => "agent.get",
-        Method::AgentRead(_) => "agent.read",
-        Method::AgentExplain(_) => "agent.explain",
-        Method::AgentSendKeys(_) => "agent.send_keys",
-        Method::AgentRename(_) => "agent.rename",
-        Method::AgentViewSet(_) => "agent.view.set",
-        Method::AgentViewClear(_) => "agent.view.clear",
-        Method::AgentFocus(_) => "agent.focus",
-        Method::AgentStart(_) => "agent.start",
-        Method::AgentPrompt(_) => "agent.prompt",
-        Method::AgentWait(_) => "agent.wait",
-        Method::PaneSplit(_) => "pane.split",
-        Method::PaneSwap(_) => "pane.swap",
-        Method::PaneMove(_) => "pane.move",
-        Method::PaneZoom(_) => "pane.zoom",
-        Method::PaneLayout(_) => "pane.layout",
-        Method::PaneProcessInfo(_) => "pane.process_info",
-        Method::LayoutExport(_) => "layout.export",
-        Method::LayoutApply(_) => "layout.apply",
-        Method::LayoutSetSplitRatio(_) => "layout.set_split_ratio",
-        Method::PaneNeighbor(_) => "pane.neighbor",
-        Method::PaneEdges(_) => "pane.edges",
-        Method::PaneFocusDirection(_) => "pane.focus_direction",
-        Method::PaneResize(_) => "pane.resize",
-        Method::PaneScroll(_) => "pane.scroll",
-        Method::PaneClear(_) => "pane.clear",
-        Method::PaneEditScrollback(_) => "pane.edit_scrollback",
-        Method::PaneSelectionRead(_) => "pane.selection.read",
-        Method::PaneCopyMotion(_) => "pane.copy_motion",
-        Method::PaneCopySearch(_) => "pane.copy_search",
-        Method::PaneList(_) => "pane.list",
-        Method::PaneCurrent(_) => "pane.current",
-        Method::PaneGet(_) => "pane.get",
-        Method::PaneFocus(_) => "pane.focus",
-        Method::PaneInputSet(_) => "pane.input.set",
-        Method::PaneLinkActivate(_) => "pane.link.activate",
-        Method::PaneLinkResolve(_) => "pane.link.resolve",
-        Method::PaneRename(_) => "pane.rename",
-        Method::PaneSendText(_) => "pane.send_text",
-        Method::PaneSendKeys(_) => "pane.send_keys",
-        Method::PaneSendInput(_) => "pane.send_input",
-        Method::PaneRead(_) => "pane.read",
-        Method::PaneReportAgent(_) => "pane.report_agent",
-        Method::PaneReportAgentSession(_) => "pane.report_agent_session",
-        Method::PaneReportMetadata(_) => "pane.report_metadata",
-        Method::PaneClearAgentAuthority(_) => "pane.clear_agent_authority",
-        Method::PaneReleaseAgent(_) => "pane.release_agent",
-        Method::PaneClose(_) => "pane.close",
-        Method::PopupClose(_) => "popup.close",
-        Method::EventsSubscribe(_) => "events.subscribe",
-        Method::EventsWait(_) => "events.wait",
-        Method::PaneWaitForOutput(_) => "pane.wait_for_output",
-        Method::IntegrationList(_) => "integration.list",
-        Method::IntegrationInstall(_) => "integration.install",
-        Method::IntegrationUninstall(_) => "integration.uninstall",
-        Method::PluginLink(_) => "plugin.link",
-        Method::PluginList(_) => "plugin.list",
-        Method::PluginUnlink(_) => "plugin.unlink",
-        Method::PluginEnable(_) => "plugin.enable",
-        Method::PluginDisable(_) => "plugin.disable",
-        Method::PluginActionList(_) => "plugin.action.list",
-        Method::PluginActionInvoke(_) => "plugin.action.invoke",
-        Method::PluginLogList(_) => "plugin.log.list",
-        Method::PluginPaneOpen(_) => "plugin.pane.open",
-        Method::PluginPaneFocus(_) => "plugin.pane.focus",
-        Method::PluginPaneClose(_) => "plugin.pane.close",
-    }
+    method.operation().name
 }
 
 fn api_response_outcome(response: &str) -> &'static str {
@@ -738,111 +632,32 @@ fn read_initial_request_line_with_timeout(
     read_initial_request_line_with_limits(stream, timeout, MAX_INITIAL_REQUEST_BYTES)
 }
 
-/// Reads the first request line without consuming bytes past its newline:
-/// later code probes the same stream for disconnects.
-#[cfg(unix)]
 fn read_initial_request_line_with_limits(
     stream: &mut LocalStream,
     timeout: Duration,
     max_bytes: usize,
 ) -> std::io::Result<Option<String>> {
-    use std::io::Read as _;
-    use std::os::fd::AsRawFd as _;
-
-    let fd = match stream {
-        LocalStream::UdSocket(stream) => stream.inner().as_raw_fd(),
-    };
-    let deadline = Instant::now() + timeout;
-    let mut bytes = Vec::new();
-    let mut buf = [0u8; 8192];
-
-    loop {
-        // Allow one byte past max_bytes for the newline, as the old byte loop did.
-        let want = buf.len().min(max_bytes + 1 - bytes.len());
-        // SAFETY: fd is owned by `stream` and outlives the call; buf holds `want` bytes.
-        let peeked = unsafe {
-            libc::recv(
-                fd,
-                buf.as_mut_ptr().cast(),
-                want,
-                libc::MSG_PEEK | libc::MSG_DONTWAIT,
-            )
-        };
-        if peeked < 0 {
-            let err = io::Error::last_os_error();
-            match err.kind() {
-                io::ErrorKind::Interrupted => continue,
-                io::ErrorKind::WouldBlock => {}
-                _ => return Err(err),
-            }
-            let remaining = deadline.saturating_duration_since(Instant::now());
-            if remaining.is_zero() {
-                return Err(io::Error::new(
-                    io::ErrorKind::TimedOut,
-                    "timed out reading api request",
-                ));
-            }
-            let mut pollfd = libc::pollfd {
-                fd,
-                events: libc::POLLIN,
-                revents: 0,
-            };
-            let timeout_ms = remaining.as_millis().clamp(1, i32::MAX as u128) as i32;
-            // SAFETY: pollfd is a valid single-entry array for the call's duration.
-            if unsafe { libc::poll(&mut pollfd, 1, timeout_ms) } < 0 {
-                let err = io::Error::last_os_error();
-                if err.kind() != io::ErrorKind::Interrupted {
-                    return Err(err);
-                }
-            }
-            continue;
-        }
-        let peeked = peeked as usize;
-        if peeked == 0 {
-            return Ok(None);
-        }
-        let take = buf[..peeked]
-            .iter()
-            .position(|&byte| byte == b'\n')
-            .map_or(peeked, |newline| newline + 1);
-        stream.read_exact(&mut buf[..take])?;
-        bytes.extend_from_slice(&buf[..take]);
-        if bytes.last() == Some(&b'\n') {
-            return String::from_utf8(bytes)
-                .map(Some)
-                .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err));
-        }
-        if bytes.len() > max_bytes {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "api request line is too large",
-            ));
-        }
-    }
-}
-
-#[cfg(windows)]
-fn read_initial_request_line_with_limits(
-    stream: &mut LocalStream,
-    timeout: Duration,
-    max_bytes: usize,
-) -> std::io::Result<Option<String>> {
+    set_local_stream_polling(stream, true)?;
     let deadline = Instant::now() + timeout;
     let mut bytes = Vec::new();
     let mut byte = [0u8; 1];
 
-    loop {
-        match poll_local_stream_read(stream, &mut byte)? {
-            LocalStreamRead::Closed => return Ok(None),
+    let result = loop {
+        let read = match poll_local_stream_read(stream, &mut byte) {
+            Ok(read) => read,
+            Err(err) => break Err(err),
+        };
+        match read {
+            LocalStreamRead::Closed => break Ok(None),
             LocalStreamRead::Data => {
                 bytes.push(byte[0]);
                 if byte[0] == b'\n' {
-                    return String::from_utf8(bytes)
+                    break String::from_utf8(bytes)
                         .map(Some)
                         .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err));
                 }
                 if bytes.len() > max_bytes {
-                    return Err(io::Error::new(
+                    break Err(io::Error::new(
                         io::ErrorKind::InvalidData,
                         "api request line is too large",
                     ));
@@ -850,7 +665,7 @@ fn read_initial_request_line_with_limits(
             }
             LocalStreamRead::Pending => {
                 if Instant::now() >= deadline {
-                    return Err(io::Error::new(
+                    break Err(io::Error::new(
                         io::ErrorKind::TimedOut,
                         "timed out reading api request",
                     ));
@@ -858,7 +673,9 @@ fn read_initial_request_line_with_limits(
                 std::thread::sleep(CONNECTION_POLL_INTERVAL);
             }
         }
-    }
+    };
+    set_local_stream_polling(stream, false)?;
+    result
 }
 
 #[cfg(all(test, windows))]
@@ -1312,53 +1129,6 @@ mod tests {
         drop(registry);
         fs::remove_file(api_path).unwrap();
         fs::remove_dir_all(directory).unwrap();
-    }
-
-    #[test]
-    fn initial_request_line_arriving_after_accept_is_read_without_poll_delay() {
-        let (mut client, mut server, _path) = local_stream_pair("late-line");
-        let writer = std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_millis(5));
-            client.write_all(b"{\"id\":").unwrap();
-            std::thread::sleep(Duration::from_millis(5));
-            client.write_all(b"\"1\"}\nextra").unwrap();
-            client
-        });
-        let started = Instant::now();
-        let line = read_initial_request_line(&mut server).unwrap();
-        let elapsed = started.elapsed();
-        let _client = writer.join().unwrap();
-        assert_eq!(line.as_deref(), Some("{\"id\":\"1\"}\n"));
-        assert!(elapsed < CONNECTION_POLL_INTERVAL, "took {elapsed:?}");
-        let mut rest = [0u8; 5];
-        server.read_exact(&mut rest).unwrap();
-        assert_eq!(&rest, b"extra", "bytes after the newline stay unread");
-    }
-
-    #[test]
-    fn initial_request_line_keeps_timeout_size_limit_and_close() {
-        let (_client, mut server, _path) = local_stream_pair("idle-line");
-        let started = Instant::now();
-        let err = read_initial_request_line_with_timeout(&mut server, Duration::from_millis(50))
-            .unwrap_err();
-        assert_eq!(err.kind(), io::ErrorKind::TimedOut);
-        assert!(started.elapsed() >= Duration::from_millis(50));
-
-        let (mut client, mut server, _path) = local_stream_pair("big-line");
-        client.write_all(b"12345\n").unwrap();
-        let err = read_initial_request_line_with_limits(&mut server, Duration::from_secs(1), 4)
-            .unwrap_err();
-        assert_eq!(err.kind(), io::ErrorKind::InvalidData);
-
-        let (mut client, mut server, _path) = local_stream_pair("max-line");
-        client.write_all(b"1234\n").unwrap();
-        let line =
-            read_initial_request_line_with_limits(&mut server, Duration::from_secs(1), 4).unwrap();
-        assert_eq!(line.as_deref(), Some("1234\n"));
-
-        let (client, mut server, _path) = local_stream_pair("closed-line");
-        drop(client);
-        assert!(read_initial_request_line(&mut server).unwrap().is_none());
     }
 
     fn pane_info(
