@@ -508,8 +508,10 @@ fn render_popup_surface(
     };
     let runtime = app.terminal_runtimes.get(&popup.terminal_id)?;
     let content_area = Rect::new(0, 0, geometry.inner.width, geometry.inner.height);
+    let has_child_output = runtime.has_child_output();
     let (buffer, cursor) =
         crate::server::render_stream::render_terminal_virtual(runtime, content_area);
+    let cursor = cursor.filter(|_| has_child_output);
     let hyperlinks = runtime.visible_hyperlinks(content_area);
     let title = app
         .state

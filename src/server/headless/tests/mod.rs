@@ -3041,6 +3041,12 @@ async fn client_shell_streams_and_targets_popup_terminal_content() {
             4,
         );
     let (_, popup_terminal_id) = server.app.install_test_popup_runtime(popup_runtime);
+    server
+        .app
+        .terminal_runtimes
+        .get(&popup_terminal_id)
+        .expect("popup runtime")
+        .test_process_pty_bytes(b"$ ");
 
     let (writer, control_rx, render_rx) = test_client_writer();
     assert!(
@@ -3161,6 +3167,45 @@ async fn client_shell_streams_and_targets_popup_terminal_content() {
         panic!("expected pane surface after popup close");
     };
     assert!(surface.popup.is_none());
+    shutdown_test_runtimes(&mut server);
+}
+
+#[tokio::test]
+async fn client_shell_popup_cursor_waits_for_child_output() {
+    let mut server = test_headless_server();
+    let _pane_input = install_focused_test_runtime(&mut server, b"base-pane");
+    let popup_runtime = crate::terminal::TerminalRuntime::test_with_screen_bytes(40, 12, b"");
+    let (_, popup_terminal_id) = server.app.install_test_popup_runtime(popup_runtime);
+    let (_control_rx, render_rx) = connect_matching_test_shell(&mut server, 12);
+
+    server.render_and_stream();
+    let ServerMessage::PaneSurface(surface) =
+        read_server_message(render_rx.recv().expect("popup surface before child output"))
+    else {
+        panic!("expected pane surface");
+    };
+    assert_eq!(surface.popup.expect("popup surface").frame.cursor, None);
+
+    server
+        .app
+        .terminal_runtimes
+        .get(&popup_terminal_id)
+        .expect("popup runtime")
+        .test_process_pty_bytes(b"$ ");
+    server.clients.get_mut(&12).unwrap().request_recompute();
+    server.render_and_stream();
+    let ServerMessage::PaneSurface(surface) =
+        read_server_message(render_rx.recv().expect("popup surface after child output"))
+    else {
+        panic!("expected pane surface");
+    };
+    let cursor = surface
+        .popup
+        .expect("popup surface")
+        .frame
+        .cursor
+        .expect("popup cursor after child output");
+    assert_eq!((cursor.x, cursor.y, cursor.visible), (2, 0, true));
     shutdown_test_runtimes(&mut server);
 }
 

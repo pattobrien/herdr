@@ -360,6 +360,10 @@ impl TerminalRuntime {
         self.0.synchronized_output_state()
     }
 
+    pub fn has_child_output(&self) -> bool {
+        self.0.has_child_output()
+    }
+
     pub fn visible_text(&self) -> String {
         self.0.visible_text()
     }
