@@ -523,6 +523,18 @@ impl App {
         self.state.mode = Mode::Terminal;
         Ok((ws_idx, new_pane))
     }
+
+    pub(crate) fn overlay_awaits_child_output(
+        &self,
+        ws_idx: usize,
+        pane_id: crate::layout::PaneId,
+    ) -> bool {
+        self.overlay_panes.contains_key(&pane_id)
+            && self
+                .state
+                .runtime_for_pane_in_workspace(&self.terminal_runtimes, ws_idx, pane_id)
+                .is_some_and(|runtime| !runtime.has_child_output())
+    }
 }
 
 #[cfg(test)]
