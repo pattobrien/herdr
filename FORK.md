@@ -20,6 +20,10 @@ with mise instead of built locally.
 - Popup panes and overlay plugin panes hide the cursor until the child writes its first output, so
   a popup or overlay opens without a cursor block at its top-left. Upstream only accepts bug reports
   from unlisted contributors, so there is no upstream PR.
+- Render cadence cap is 8 ms instead of 16 ms, so a 120 Hz host terminal gets about 100 frames per
+  second instead of about 56. Upstream
+  [herdrdev/herdr#1134](https://github.com/herdrdev/herdr/issues/1134) is open without a maintainer
+  reply, so there is no upstream PR.
 
 Remove an item from this list once upstream ships an equivalent and a sync brings it in. The
 cell-centre SGR-pixels mouse fix was dropped on 2026-10-10 because upstream
