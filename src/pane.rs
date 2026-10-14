@@ -3539,6 +3539,10 @@ impl PaneRuntime {
         self.terminal.synchronized_output_state()
     }
 
+    pub fn has_child_output(&self) -> bool {
+        self.terminal.has_child_output()
+    }
+
     pub fn visible_text(&self) -> String {
         self.terminal.visible_text()
     }

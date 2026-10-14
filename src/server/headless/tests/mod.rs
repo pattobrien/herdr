@@ -3041,6 +3041,12 @@ async fn client_shell_streams_and_targets_popup_terminal_content() {
             4,
         );
     let (_, popup_terminal_id) = server.app.install_test_popup_runtime(popup_runtime);
+    server
+        .app
+        .terminal_runtimes
+        .get(&popup_terminal_id)
+        .expect("popup runtime")
+        .test_process_pty_bytes(b"$ ");
 
     let (writer, control_rx, render_rx) = test_client_writer();
     assert!(

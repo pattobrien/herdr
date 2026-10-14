@@ -202,6 +202,7 @@ pub(crate) struct GhosttyPaneCore {
     pub dirty_collection_hook: Option<Box<dyn FnOnce() + Send>>,
     pub terminal: crate::ghostty::Terminal,
     synchronized_output_epoch: u64,
+    has_child_output: bool,
     #[cfg(windows)]
     recent_fallback: windows_recent_fallback::Cache,
     pub render_state: crate::ghostty::RenderState,
@@ -497,6 +498,10 @@ impl PaneTerminal {
 
     pub(crate) fn synchronized_output_state(&self) -> (bool, u64) {
         self.ghostty.synchronized_output_state()
+    }
+
+    pub fn has_child_output(&self) -> bool {
+        self.ghostty.has_child_output()
     }
 
     pub fn visible_text(&self) -> String {
@@ -1194,6 +1199,7 @@ impl GhosttyPaneTerminal {
                 dirty_collection_hook: None,
                 terminal,
                 synchronized_output_epoch: 0,
+                has_child_output: false,
                 #[cfg(windows)]
                 recent_fallback: windows_recent_fallback::Cache::default(),
                 render_state,
@@ -1380,6 +1386,7 @@ impl GhosttyPaneTerminal {
                 pointer_shape: None,
             };
         };
+        core.has_child_output = true;
 
         let _ = core.terminal.take_pwd_changes();
         // Restored history may have exercised terminal callbacks before this live PTY write.
@@ -2035,6 +2042,10 @@ impl GhosttyPaneTerminal {
                     .ok()
             })
             .unwrap_or(false)
+    }
+
+    pub fn has_child_output(&self) -> bool {
+        self.core.lock().is_ok_and(|core| core.has_child_output)
     }
 
     pub(crate) fn synchronized_output_state(&self) -> (bool, u64) {
