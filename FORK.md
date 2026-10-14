@@ -17,9 +17,9 @@ with mise instead of built locally.
   [mgpai22/herdr](https://github.com/mgpai22/herdr) commit f61be9c9. No upstream PR.
 - The fork release workflow `.github/workflows/release-fork.yml`, this file, and `mise.toml`, which
   declares the Zig series the vendored libghostty-vt requires.
-- Popup panes hide the cursor until the child writes its first output, so a popup opens without a
-  cursor block at its top-left. Upstream only accepts bug reports from unlisted contributors, so
-  there is no upstream PR.
+- Popup panes and overlay plugin panes hide the cursor until the child writes its first output, so
+  a popup or overlay opens without a cursor block at its top-left. Upstream only accepts bug reports
+  from unlisted contributors, so there is no upstream PR.
 
 Remove an item from this list once upstream ships an equivalent and a sync brings it in. The
 cell-centre SGR-pixels mouse fix was dropped on 2026-10-10 because upstream
